@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1.09239,0,0,1.09239,-21.6649,-22.2835)">
+        <g transform="matrix(1.0234,0,0,1.38137,-28.4699,9.66247)">
+            <rect x="-17.472" y="-25.336" width="542.015" height="398.537" style="fill:rgb(0,5,72);"/>
+        </g>
+        <g transform="matrix(0.645396,0.243107,-0.56723,1.50587,378.888,-17.4308)">
+            <rect x="-17.472" y="-25.336" width="542.015" height="398.537" style="fill:rgb(235,0,60);"/>
+        </g>
+        <g transform="matrix(0.871695,0,0,0.871695,52.7698,32.4534)">
+            <g transform="matrix(1,0,0,1,91.9713,0)">
+                <g transform="matrix(0.68152,0,0,0.722557,160.168,94.8718)">
+                    <g transform="matrix(202.037,0,0,202.037,207.871,277.556)">
+                    </g>
+                    <text x="86.447px" y="277.556px" style="font-family:'MavenJohanniter-Bold', 'Maven Johanniter', sans-serif;font-weight:700;font-size:202.037px;fill:white;">u</text>
+                </g>
+                <g transform="matrix(0.68152,0,0,0.722557,236.308,94.8718)">
+                    <g transform="matrix(202.037,0,0,202.037,209.892,277.556)">
+                    </g>
+                    <text x="86.447px" y="277.556px" style="font-family:'MavenJohanniter-Bold', 'Maven Johanniter', sans-serif;font-weight:700;font-size:202.037px;fill:white;">h</text>
+                </g>
+                <path d="M175.514,186.609L154.654,186.61L131.907,247.195L132.001,262.839L182.907,262.821L182.914,244.383L153.684,244.563L175.514,186.609Z" style="fill:white;"/>
+                <g transform="matrix(0.68152,0,0,0.722557,101.985,119.032)">
+                    <g transform="matrix(202.037,0,0,202.037,183.021,277.556)">
+                    </g>
+                    <text x="86.447px" y="277.556px" style="font-family:'MavenJohanniter-Bold', 'Maven Johanniter', sans-serif;font-weight:700;font-size:202.037px;fill:white;">J</text>
+                </g>
+            </g>
+            <g transform="matrix(0.651044,0,0,0.690246,-66.8753,103.887)">
+                <g transform="matrix(202.037,0,0,202.037,202.012,277.556)">
+                </g>
+                <text x="86.447px" y="277.556px" style="font-family:'MavenJohanniter-Bold', 'Maven Johanniter', sans-serif;font-weight:700;font-size:202.037px;fill:white;">a</text>
+            </g>
+        </g>
+        <g transform="matrix(0.567511,0,0,0.601684,56.8154,123.011)">
+            <g transform="matrix(202.037,0,0,202.037,207.871,277.556)">
+            </g>
+            <text x="86.447px" y="277.556px" style="font-family:'MavenJohanniter-Bold', 'Maven Johanniter', sans-serif;font-weight:700;font-size:202.037px;fill:white;">p</text>
+        </g>
+        <g transform="matrix(0.567511,0,0,0.601684,124.339,123.011)">
+            <g transform="matrix(202.037,0,0,202.037,207.871,277.556)">
+            </g>
+            <text x="86.447px" y="277.556px" style="font-family:'MavenJohanniter-Bold', 'Maven Johanniter', sans-serif;font-weight:700;font-size:202.037px;fill:white;">p</text>
+        </g>
+    </g>
+</svg>
