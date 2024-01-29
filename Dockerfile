@@ -4,7 +4,7 @@ RUN mkdir -p /usr/src/nuxt-app
 WORKDIR /usr/src/nuxt-app
 COPY . .
 
-RUN npm ci && npm cache clean --force
+RUN npm
 RUN npm run build
 
 ENV NUXT_HOST=0.0.0.0
