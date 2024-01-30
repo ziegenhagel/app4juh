@@ -9,7 +9,7 @@
           class="mx-auto max-w-6xl"
           v-model="activeTab" grow color="#EB003C">
         <v-tab v-for="tab in tabs"
-               :to="tab"
+               :to="tab.toLowerCase()"
                :key="tab">{{ tab }}
         </v-tab>
       </v-tabs>
