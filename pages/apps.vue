@@ -14,6 +14,60 @@
   </div>
 </template>
 <script setup>
+import {ID,Client} from "appwrite";
+
+
+const client2 = new Client()
+    .setEndpoint('https://appwrite.app4juh.de/v1')
+    .setProject('65b9164341c233319168');
+
+const client = useAppwrite()
+const {account, database, realtime} = client
+
+// try {
+//   // const account = appwrite.account;
+//   await account.createEmailSession('test@example.com','test@example.com');
+//   console.log('Successfully logged in');
+//   // Handle successful login, like redirecting the user
+// } catch (error) {
+//   console.error('Error logging in:', error.message);
+//   // Handle login errors
+// }
+
+try {
+  const res = await account.get()
+  console.log(res)
+} catch (err) {
+  console.log(err)
+}
+console.log('client', client)
+console.log('client2', client2)
+
+
+client2.subscribe('databases', response => {
+  console.log('Database event received', response)
+  if(response.events.includes('buckets.*.files.*.create')) {
+    // Log when a new file is uploaded
+    console.log(response.payload);
+  }
+});
+
+const promise = database.createDocument(
+    '65b917095f3f32e043b8',
+    '65b9171323ba8a72f465',
+    ID.unique(),
+    {
+      name: 'John Doe',
+      status: 'draft',
+    }
+);
+
+promise.then(function (response) {
+  console.log(response);
+}, function (error) {
+  console.log(error);
+});
+
 const data = ref([
   {
     title: '112 Trainer',

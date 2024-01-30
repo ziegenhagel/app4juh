@@ -1,7 +1,17 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     devtools: {enabled: true},
-    modules: ["@nuxtjs/tailwindcss", "nuxt-vuetify", "@nuxt/image", "@nuxtjs/supabase"],
+    modules: [
+        "@nuxtjs/tailwindcss",
+        "nuxt-vuetify",
+        "@nuxt/image",
+        // "@nuxtjs/supabase",
+        "nuxt-appwrite"
+    ],
+    appwrite: {
+        endpoint: 'https://appwrite.app4juh.de/v1',
+        project: '65b9164341c233319168',
+    },
     ssr: false,
     /* have favicon and mobile web app capable and title App4Juh*/
     head: {
@@ -22,11 +32,4 @@ export default defineNuxtConfig({
         ],
         link: [{rel: "icon", type: "image/x-icon", href: "/image/app4juh.jpg"}],
     },
-
-    supabase: {
-        url: "" + process.env.SUPABASE_URL,
-        key: "" + process.env.SUPABASE_KEY,
-    }
-
-
 })
