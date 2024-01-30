@@ -23,5 +23,10 @@ export default defineNuxtConfig({
         link: [{rel: "icon", type: "image/x-icon", href: "/image/app4juh.jpg"}],
     },
 
+    supabase: {
+        url: "" + process.env.SUPABASE_URL,
+        key: "" + process.env.SUPABASE_KEY,
+    }
+
 
 })
