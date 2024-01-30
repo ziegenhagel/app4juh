@@ -1,20 +1,24 @@
 <template>
   <v-app>
     <v-app-bar flat>
-      <img src="/image/app4juh_blau.svg" alt="App4Juh Logo" class="w-32 h-32 mx-auto"/>
+      <img src="/image/app4juh_blau.svg" alt="App4Juh Logo" class="w-32 h-full mx-auto"/>
     </v-app-bar>
     <v-app-bar
         flat class="-mt-3">
       <v-tabs
           class="mx-auto max-w-6xl"
           v-model="activeTab" grow color="#EB003C">
-        <v-tab v-for="tab in tabs" :key="tab">{{ tab }}</v-tab>
+        <v-tab v-for="tab in tabs"
+               :to="tab"
+               :key="tab">{{ tab }}
+        </v-tab>
       </v-tabs>
     </v-app-bar>
     <v-container>
       <v-main>
-        <apps v-if="activeTab === 0"/>
-        <files v-if="activeTab === 1"/>
+        <div class="max-w-6xl mx-auto">
+          <slot/>
+        </div>
       </v-main>
     </v-container>
   </v-app>
