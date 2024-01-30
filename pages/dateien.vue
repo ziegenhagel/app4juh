@@ -1,5 +1,5 @@
 <template>
-  <div class="text-xl">
+  <div class="text-4xl">
     <v-skeleton-loader elevation="2" type="article" v-if="path == null"/>
     <v-btn @click="goBack" v-if="path?.length > 1" class="mb-2">
       <v-icon>mdi-arrow-left</v-icon>

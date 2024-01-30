@@ -1,8 +1,8 @@
 <template>
   <h1 class="text-4xl font-bold">Ideen</h1>
   <!-- alle als gelbe zettel -->
-  <div class="md:grid md:grid-cols-2 md:gap-4 xl:grid-cols-3 xl:gap-8 mt-6">
-    <div v-for="idea in ideas" :key="idea" class="bg-yellow-200 p-4 shadow-md">
+  <div class="md:grid md:grid-cols-2 flex flex-col gap-6 xl:grid-cols-3 xl:gap-8 mt-6">
+    <div v-for="idea in ideas" :key="idea" class="bg-yellow-200 p-4 shadow lg:shadow-md">
       <p class="text-lg">{{ idea }}</p>
     </div>
   </div>
