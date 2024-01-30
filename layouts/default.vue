@@ -17,6 +17,8 @@
       <v-main>
         <div class="max-w-6xl mx-auto">
           <slot/>
+
+          <v-btn class="w-full mt-4 " variant="text" @click="logout">Ausloggen</v-btn>
         </div>
       </v-main>
     </v-container>
@@ -25,6 +27,11 @@
 <script setup lang="ts">
 const tabs = ['Apps', 'Dateien', 'Ideen']
 const activeTab = ref(tabs[0])
+const supabase = useSupabaseClient()
+const logout = async () => {
+  await supabase.auth.signOut()
+  navigateTo('/login')
+}
 </script>
 <style>
 .v-application__wrap {
