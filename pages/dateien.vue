@@ -33,7 +33,7 @@
 <script setup>
 const files = ref([])
 const corsURI = 'https://cors.app4juh.de/'
-const baseURI = corsURI + 'https://files.app4juh.de/api/public/share/dVl84zgi'
+const baseURI = corsURI + 'https://files.app4juh.de/api/public/share/j4_gV80u'
 const path = ref(null)
 
 const readDir = async (url) => {
