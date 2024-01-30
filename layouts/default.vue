@@ -3,8 +3,7 @@
     <v-app-bar flat>
       <img src="/image/app4juh_blau.svg" alt="App4Juh Logo" class="w-32 h-full mx-auto"/>
     </v-app-bar>
-    <v-app-bar
-        flat class="-mt-3">
+    <v-app-bar class="-mt-3">
       <v-tabs
           class="mx-auto max-w-6xl"
           v-model="activeTab" grow color="#EB003C">
