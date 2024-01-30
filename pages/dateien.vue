@@ -49,4 +49,6 @@ const goBack = () => {
 onMounted(() => {
   readDir('/')
 })
+
+
 </script>
