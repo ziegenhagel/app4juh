@@ -7,7 +7,7 @@
     </v-app-bar-title>
     <template #append>
       <v-btn @click="play" variant="elevated" prepend-icon="mdi-play">Quiz starten</v-btn>
-<!--      <v-btn @click="logout" color="white"  variant="flat" prepend-icon="mdi-logout">Ausloggen</v-btn>-->
+      <!--      <v-btn @click="logout" color="white"  variant="flat" prepend-icon="mdi-logout">Ausloggen</v-btn>-->
     </template>
 
   </v-app-bar>
@@ -24,7 +24,16 @@
                variant="tonal" prepend-icon="mdi-plus">Quiz erstellen
         </v-btn>
       </template>
+      <v-spacer/>
     </div>
+
+    <template #append>
+      <div class="p-2">
+        <v-btn @click="importQuiz" class="w-full" color="primary" variant="flat" prepend-icon="mdi-import">Quiz
+          importieren
+        </v-btn>
+      </div>
+    </template>
   </v-navigation-drawer>
   <div class="mt-12" v-if="currentQuiz">
     <div class="flex">
@@ -63,7 +72,11 @@
     </v-card>
 
     <!-- FRAGE HINZUFÜGEN -->
-    <v-btn @click="addQuestion" class="w-full mb-20" color="primary" prepend-icon="mdi-plus">Frage hinzufügen</v-btn>
+    <div class="flex gap-2">
+      <v-btn @click="shareQuiz" class="mb-10" color="" prepend-icon="mdi-share">Quiz teilen</v-btn>
+      <v-spacer/>
+      <v-btn @click="addQuestion" class="mb-2" color="primary" prepend-icon="mdi-plus">Frage hinzufügen</v-btn>
+    </div>
 
   </div>
 </template>
@@ -119,23 +132,27 @@ const getQuizzes = async () => {
     }
   }))
 }
-const createQuiz = async () => {
+const createQuiz = async (pOld = null) => {
   // get title and subttle via swal
-  const {value: formValues} = await Swal.fire({
-    title: 'Quiz erstellen',
-    html:
-        '<input id="swal-input1" class="swal2-input" placeholder="Titel">' +
-        '<input id="swal-input2" class="swal2-input" placeholder="Untertitel">',
-    focusConfirm: false,
-    preConfirm: () => {
-      return [
-        document.getElementById('swal-input1').value,
-        document.getElementById('swal-input2').value
-      ]
-    }
-  })
-
-  console.log('formValues', formValues)
+  let formValues
+  if (!pOld) {
+    const {value: formValuesT} = await Swal.fire({
+      title: 'Quiz erstellen',
+      html:
+          '<input id="swal-input1" class="swal2-input" placeholder="Titel">' +
+          '<input id="swal-input2" class="swal2-input" placeholder="Untertitel">',
+      focusConfirm: false,
+      preConfirm: () => {
+        return [
+          document.getElementById('swal-input1').value,
+          document.getElementById('swal-input2').value
+        ]
+      }
+    })
+    formValues = formValuesT
+  } else {
+    formValues = [pOld.title, pOld.subtitle]
+  }
 
   // create id
   const docId = ID.unique()
@@ -144,7 +161,9 @@ const createQuiz = async () => {
       {
         title: formValues[0],
         subtitle: formValues[1],
-        questions: '[]'
+        questions:
+            pOld ? pOld.questions :
+                '[{"title":"Neue Frage #1","answers":[{"title":"Antwort 1","correct":true},{"title":"Antwort 2","correct":false},{"title":"Antwort 3","correct":false},{"title":"Antwort 4","correct":false}]}]'
       })
   console.log('data', data)
   console.log('docId', docId)
@@ -235,6 +254,69 @@ const saveCurrentQuiz = async () => {
 const play = () => {
   // open in new tab and start quiz
   window.open('/quiz/play/' + currentQuiz.value.$id)
+}
+
+const shareQuiz = async () => {
+  // zeige die id zum teilen an
+  await Swal.fire({
+    title: 'Quiz teilen',
+    html: 'Teile diese ID mit anderen Trainer:innen:<br><br>' +
+        '<div class="text-2xl font-bold">' + currentQuiz.value.$id + '</div>',
+    icon: 'info',
+    timer: 5000,
+    showConfirmButton: false
+  })
+}
+
+// beim imortieren kann man zwischen mitbearbeiten und kopieren wählen
+const importQuiz = async () => {
+  // zeige die id zum teilen an
+  const {value: formValues} = await Swal.fire({
+    title: 'Quiz importieren',
+    html:
+        '<input id="swal-input1" class="swal2-input" placeholder="Quiz ID">' +
+        '<select id="swal-input2" class="hidden swal2-input">' +
+        '<option value="copy">Kopieren</option>' +
+        '<option value="edit">Mitbearbeiten</option>' +
+        '</select>',
+    focusConfirm: false,
+    preConfirm: () => {
+      return [
+        document.getElementById('swal-input1').value,
+        document.getElementById('swal-input2').value
+      ]
+    }
+  })
+
+  console.log('formValues', formValues)
+
+  // from all quizzes get the one with the id
+  const allquizzes = await appwrite.database.listDocuments('quiz', 'quizzes')
+  const quizToCopy = allquizzes.documents.find(quiz => quiz.$id === formValues[0])
+
+  if (!quizToCopy) {
+    await Swal.fire({
+      title: 'Fehler',
+      html: 'Quiz mit der ID <b>' + formValues[0] + '</b> nicht gefunden',
+      icon: 'error',
+      timer: 5000,
+      showConfirmButton: false
+    })
+    return
+  }
+
+  // create new quiz with same data using the create Quiz function
+  await createQuiz(quizToCopy)
+
+  // tell user that quiz was imported
+  await Swal.fire({
+    title: 'Quiz importiert',
+    html: 'Das Quiz wurde importiert',
+    icon: 'success',
+    timer: 5000,
+    showConfirmButton: false
+  })
+
 }
 </script>
 
