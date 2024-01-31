@@ -25,7 +25,7 @@
   </v-app>
 </template>
 <script setup lang="ts">
-const tabs = ['Apps', 'Dateien', 'Ideen']
+const tabs = ['Apps', 'Material', 'Ideen']
 const activeTab = ref(tabs[0])
 // const supabase = useSupabaseClient()
 // const logout = async () => {
