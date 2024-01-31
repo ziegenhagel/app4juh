@@ -31,9 +31,10 @@
   </div>
 </template>
 <script setup>
+const shareID = 'faTU9fSo'
 const files = ref([])
 const corsURI = 'https://cors.app4juh.de/'
-const baseURI = corsURI + 'https://files.app4juh.de/api/public/share/j4_gV80u'
+const baseURI = corsURI + 'https://files.app4juh.de/api/public/share/' + shareID
 const path = ref(null)
 
 const readDir = async (url) => {
@@ -56,7 +57,7 @@ onMounted(() => {
 })
 
 const openFile = (url) => {
-  window.open('https://files.app4juh.de/api/public/dl/dVl84zgi' + url + '?inline=true')
+  window.open('https://files.app4juh.de/api/public/dl/' + shareID + url + '?inline=true')
 }
 
 </script>
