@@ -1,2 +1,3 @@
 <template>
+  Client view
 </template>
