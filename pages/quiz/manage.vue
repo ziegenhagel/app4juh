@@ -6,7 +6,9 @@
       <span class="font-bold">Quiz</span> verwalten
     </v-app-bar-title>
     <template #append>
-      <v-btn @click="play" variant="elevated" prepend-icon="mdi-play">Quiz starten</v-btn>
+      <v-btn @click="play"
+             v-if="currentQuiz"
+             variant="elevated" prepend-icon="mdi-play">Quiz starten</v-btn>
       <!--      <v-btn @click="logout" color="white"  variant="flat" prepend-icon="mdi-logout">Ausloggen</v-btn>-->
     </template>
 

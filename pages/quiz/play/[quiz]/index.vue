@@ -7,7 +7,8 @@
         <v-progress-linear indeterminate color="#EB003C"></v-progress-linear>
       </div>
     </div>
-    <v-btn @click="connecting = false" class="my-8" prepend-icon="mdi-play">Quiz starten</v-btn>
+    <v-btn
+        @click="connecting = false" class="my-8" prepend-icon="mdi-play">Quiz starten</v-btn>
   </div>
 </template>
 <script setup>
