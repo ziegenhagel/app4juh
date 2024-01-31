@@ -3,30 +3,39 @@
     <v-app-bar flat>
       <img src="/image/app4juh_blau.svg" alt="App4Juh Logo" class="w-32 h-full mx-auto"/>
     </v-app-bar>
-    <v-app-bar class="-mt-3">
-      <v-tabs
-          class="mx-auto max-w-6xl"
-          v-model="activeTab" grow color="#EB003C">
-        <v-tab v-for="tab in tabs"
-               :to="'/'+tab.toLowerCase()"
-               :key="tab">{{ tab }}
-        </v-tab>
-      </v-tabs>
-    </v-app-bar>
-    <v-container>
-      <v-main>
-        <div class="max-w-6xl mx-auto">
-          <slot/>
 
-<!--          <v-btn class="w-full mt-4 " variant="text" @click="logout">Ausloggen</v-btn>-->
-        </div>
-      </v-main>
-    </v-container>
+    <template v-if="locked">
+
+      <!-- pin 1044 must be entered to unlock -->
+      <pin v-model="locked"/>
+    </template>
+    <template v-else>
+      <v-app-bar class="-mt-3">
+        <v-tabs
+            class="mx-auto max-w-6xl"
+            v-model="activeTab" grow color="#EB003C">
+          <v-tab v-for="tab in tabs"
+                 :to="'/'+tab.toLowerCase()"
+                 :key="tab">{{ tab }}
+          </v-tab>
+        </v-tabs>
+      </v-app-bar>
+      <v-container>
+        <v-main>
+          <div class="max-w-6xl mx-auto">
+            <slot/>
+
+            <!--          <v-btn class="w-full mt-4 " variant="text" @click="logout">Ausloggen</v-btn>-->
+          </div>
+        </v-main>
+      </v-container>
+    </template>
   </v-app>
 </template>
 <script setup lang="ts">
 const tabs = ['Apps', 'Material', 'Ideen']
 const activeTab = ref(tabs[0])
+const locked = ref(true)
 // const supabase = useSupabaseClient()
 // const logout = async () => {
 //   await supabase.auth.signOut()
