@@ -35,7 +35,15 @@
 <script setup lang="ts">
 const tabs = ['Apps', 'Material', 'Ideen']
 const activeTab = ref(tabs[0])
-const locked = ref(true)
+
+// see if locked is false in local storage otherwise always true
+const locked = ref(localStorage.getItem('locked') === 'false' ? false : true)
+
+// when locked changes, save to local storage
+watch(locked, (newValue) => {
+  localStorage.setItem('locked', newValue)
+})
+
 // const supabase = useSupabaseClient()
 // const logout = async () => {
 //   await supabase.auth.signOut()
