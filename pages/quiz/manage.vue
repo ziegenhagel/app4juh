@@ -83,7 +83,6 @@
 <script setup>
 import {Client, Databases, ID} from "appwrite";
 
-
 definePageMeta({layout: 'quiz'})
 const appwrite = useAppwrite()
 const quizzes = ref([])
