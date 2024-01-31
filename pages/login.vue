@@ -1,20 +1,20 @@
 <script setup lang="ts">
-const supabase = useSupabaseClient()
+// const supabase = useSupabaseClient()
 const email = ref('roy-udo.kuehmichel@johanniter.de')
 const password = ref('vm#BR%aWHWR8$x')
-const user = useSupabaseUser()
+// const user = useSupabaseUser()
 
 const signIn = async () => {
-  const {data, error} = await supabase.auth.signInWithPassword({
-    email: email.value,
-    password: password.value,
-  })
-  if (error) {
-    console.error(error)
-  } else {
-    console.log(data)
-    navigateTo('/apps')
-  }
+  // const {data, error} = await supabase.auth.signInWithPassword({
+  //   email: email.value,
+  //   password: password.value,
+  // })
+  // if (error) {
+  //   console.error(error)
+  // } else {
+  //   console.log(data)
+  //   navigateTo('/apps')
+  // }
 }
 //
 // watch(()=>user, (newValue) => {
