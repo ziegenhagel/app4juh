@@ -1,5 +1,5 @@
 import { Client } from 'appwrite';
-export const useAw = () => {
+export const useAppwriteClient = () => {
   const client = new Client();
 
   client

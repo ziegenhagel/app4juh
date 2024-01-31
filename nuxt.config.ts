@@ -9,8 +9,8 @@ export default defineNuxtConfig({
         "nuxt-appwrite"
     ],
     appwrite: {
-        endpoint: 'https://appwrite.app4juh.de/v1',
-        project: '65b9164341c233319168',
+        endpoint: 'https://cloud.appwrite.io/v1',
+        project: '65ba5911b0a714ddaadf',
     },
     ssr: false,
     /* have favicon and mobile web app capable and title App4Juh*/
@@ -31,5 +31,13 @@ export default defineNuxtConfig({
 
         ],
         link: [{rel: "icon", type: "image/x-icon", href: "/image/app4juh.jpg"}],
+    },
+
+    imports: {
+        presets: [{
+            // run yarn add sweetalert2
+            from: 'sweetalert2',
+            imports: [{name: 'default', as: 'Swal'}],
+        }]
     },
 })

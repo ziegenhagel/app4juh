@@ -18,5 +18,8 @@
     "nuxt-vuetify": "^1.0.1",
     "vue": "^3.4.10",
     "vue-router": "^4.2.5"
+  },
+  "dependencies": {
+    "sweetalert2": "^11.10.4"
   }
 }
