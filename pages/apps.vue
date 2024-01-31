@@ -6,7 +6,8 @@
 ">
     <div v-for="(app,index) in data" :key="app.title" class="-mt-6 md:-mt-2 lg:mt-0">
       <nuxt-link :to="app.url"
-                 :class="{'opacity-50 cursor-not-allowed': app.disabled}"
+                 :disabled="app.disabled"
+                 :class="{'opacity-50 pointer-events-none cursor-not-allowed': app.disabled}"
                  class="text-center rounded-xl px-2 overflow-hidden">
         <img :src="'/appicons/' + index + '.jpeg'" class="aspect-square shadow-lg"/>
         <div class="font-semibold text-2xl pt-2">{{ app.title }}</div>
