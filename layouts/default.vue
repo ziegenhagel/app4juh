@@ -103,7 +103,7 @@ MAVENJOHANNITER-SEMIBOLD.TTF
 }
 
 /* and use them everywhere */
-.v-application {
+.v-application, body {
   font-family: 'Maven Johanniter', sans-serif;
 }
 </style>

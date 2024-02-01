@@ -1,9 +1,20 @@
 <template>
-  <div v-if="ready" class="h-full absolute inset-0 flex-col flex justify-center items-center bg-gray-300">
-    <h1 class="text-4xl">{{ question.title }}</h1>
-    <div class="grid grid-cols-2 gap-4">
-      <div v-for="(answer, index) in question.answers" :key="index">
-        <v-btn @click="next" class="w-full" color="primary">{{ answer.title }}</v-btn>
+  <div v-if="ready" @click="next" class="h-full absolute inset-0 flex-col flex bg-gray-100 px-10 py-12 my-3 cursor-pointer">
+    <h1 class="text-5xl">
+      <b>Frage {{ questionIndex + 1 }}</b>
+      {{ question.title }}</h1>
+    <div class="flex flex-col gap-4 mt-16">
+      <div class="answer overflow-hidden" v-for="(answer, index) in question.answers" :key="index">
+        <div class="p-6">
+          <div class="w-8 d-inline-block font-bold">{{ ['A', 'B', 'C', 'D', 'E', 'F'][index] }}</div>
+          {{ answer.title }}
+        </div>
+        <div class="progress-wrapper" v-if="status === 'show_solution'">
+          <div :style="{width: 4 * 100 / 7 + '%'}"
+               class="h-1 -mt-1 transition-all duration-1000 ease-in-out"
+               :class="answer.correct ? 'bg-green-500' : 'bg-[#010545]'"
+          ></div>
+        </div>
       </div>
     </div>
   </div>
@@ -20,12 +31,16 @@
       </div>
     </div>
     <v-btn
-        @click="clearQuiz" class="my-8" prepend-icon="mdi-play">Quiz starten
+        @click="next" class="my-8" prepend-icon="mdi-play">Quiz starten
     </v-btn>
   </div>
+
+  <!-- CI -->
+  <img src="/icon.svg" alt="icon" class="icon" style="position:fixed;width:55px;left:0;bottom:0;margin:40px">
+  <div class="aus-liebe-zum-leben">Aus Liebe zum Leben</div>
 </template>
 <script setup>
-import {Query} from 'appwrite'
+import {ID, Query} from 'appwrite'
 
 const route = useRoute()
 const appwrite = useAppwrite()
@@ -61,13 +76,16 @@ const next = async () => {
     // Die User dürfen nun die nächste Frage anklicken
     questionIndex.value++
     if (questionIndex.value < quiz.questions.length) {
-      await appwrite.database.createDocument('quiz', 'clicks', {
-        quiz: quiz.$id,
-        session,
-        client_freigabe: true,
-        questionIndex: questionIndex.value,
-      })
       status.value = 'show_question'
+      await appwrite.database.createDocument('quiz', 'clicks',
+          ID.unique(),
+          {
+            quiz: quiz.$id,
+            session,
+            client_freigabe: true,
+            questionIndex: questionIndex.value,
+          })
+      console.log('next', questionIndex.value)
     } else {
       ready.value = false
       finished.value = true
@@ -80,6 +98,26 @@ const next = async () => {
 
 onMounted(() => {
   clearQuiz()
-  next()
+  // next()
 })
 </script>
+<style>
+.aus-liebe-zum-leben {
+  position: fixed;
+  bottom: 0;
+  right: 50px;
+  bottom: 35px;
+  font-weight: 600;
+  font-size: 1.5em;
+  color: #EB003C;
+}
+
+h1, h2 {
+  color: #010545
+}
+
+.answer {
+  color: #010545;
+  @apply rounded-lg bg-white text-3xl shadow-lg
+}
+</style>
