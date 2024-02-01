@@ -1,6 +1,8 @@
 <template>
   <v-app-bar color="#EB003C">
-    <div style="background:#000548" class="w-4 h-full"></div>
+    <div style="background:#000548" class="p-2 h-full">
+      <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+    </div>
     <img src="/image/app4juh.svg" alt="App4Juh Logo" class="w-32"/>
     <v-app-bar-title>
       <span class="font-bold">Quiz</span> verwalten
@@ -8,7 +10,8 @@
     <template #append>
       <v-btn @click="play"
              v-if="currentQuiz"
-             variant="elevated" prepend-icon="mdi-play">Quiz starten</v-btn>
+             variant="elevated" prepend-icon="mdi-play">Quiz starten
+      </v-btn>
       <!--      <v-btn @click="logout" color="white"  variant="flat" prepend-icon="mdi-logout">Ausloggen</v-btn>-->
     </template>
 
