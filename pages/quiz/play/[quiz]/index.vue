@@ -1,18 +1,20 @@
 <template>
-  <div v-if="ready" @click="next" class="h-full absolute inset-0 flex-col flex bg-gray-100 px-10 py-12 my-3 cursor-pointer">
+  <div v-if="ready" @click="next"
+       class="h-full absolute inset-0 flex-col flex bg-gray-100 px-10 py-12 my-3 cursor-pointer">
     <h1 class="text-5xl">
       <b>Frage {{ questionIndex + 1 }}</b>
       {{ question.title }}</h1>
     <div class="flex flex-col gap-4 mt-16">
-      <div class="answer overflow-hidden" v-for="(answer, index) in question.answers" :key="index">
+      <div class="answer overflow-hidden" v-for="(answer, index) in question.answers" :key="index"
+           :class="status === 'show_solution' && answer.correct ? 'bg-green-600/90 text-white' : 'bg-white'">
         <div class="p-6">
           <div class="w-8 d-inline-block font-bold">{{ ['A', 'B', 'C', 'D', 'E', 'F'][index] }}</div>
           {{ answer.title }}
         </div>
         <div class="progress-wrapper" v-if="status === 'show_solution'">
-          <div :style="{width: 4 * 100 / 7 + '%'}"
+          <div :style="{width: answer.clicks * 100 / question.clicks + '%'}"
                class="h-1 -mt-1 transition-all duration-1000 ease-in-out"
-               :class="answer.correct ? 'bg-green-500' : 'bg-[#010545]'"
+               :class="answer.correct ? 'bg-green-700' : 'bg-[#010545]'"
           ></div>
         </div>
       </div>
@@ -49,8 +51,17 @@ const res = await appwrite.database.listDocuments('quiz', 'quizzes', [
   Query.equal('$id', route.params.quiz)
 ])
 let quiz = res.documents[0]
+
 //  quiz questions must be json parsed
 quiz.questions = JSON.parse(quiz.questions)
+
+// each question has a total count of clicks, and each answer has a count of clicks
+quiz.questions.forEach(question => {
+  question.answers.forEach(answer => {
+    answer.clicks = 0
+  })
+  question.clicks = 0
+})
 
 definePageMeta({layout: 'quiz'})
 const ready = ref(false)
@@ -118,6 +129,6 @@ h1, h2 {
 
 .answer {
   color: #010545;
-  @apply rounded-lg bg-white text-3xl shadow-lg
+  @apply rounded-lg text-3xl shadow-lg
 }
 </style>
