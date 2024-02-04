@@ -1,7 +1,7 @@
 <template>
   <div class="p-4">
     <template v-if="question">
-      <h1 class="text-3xl"><b>Frage {{ questionIndex + 1 }}</b> {{ question.title }}</h1>
+      <h1 class="text-3xl mt-4"><b>Frage {{ questionIndex + 1 }}</b> {{ question.title }}</h1>
       <div class="flex flex-col gap-4 mt-8" :class="status === 'waiting' ? 'opacity-50 pointer-events-none' : ''">
         <div class="answer overflow-hidden" v-for="(answer, index) in question.answers" :key="index"
              @click="clickAnswer(index)"
@@ -21,7 +21,9 @@
     </template>
     <div v-else-if="questionIndex>1"
          class="h-full absolute inset-0 w-full flex-col flex justify-center items-center bg-gray-100">
-      <h1 class="text-4xl">Quiz beendet</h1>
+      <img :src=" '/quiz/inseln/i' + quiz.insel + '.svg' " alt="insel" class="w-24 mb-6"/>
+      <h1 class="text-3xl font-medium"
+          :style="{color: inseln[quiz.insel].color}">Gratulation!</h1>
     </div>
     <div v-else
          class="h-full absolute inset-0 w-full flex-col flex justify-center items-center bg-gray-100">
@@ -36,10 +38,18 @@
         <v-btn @click="presenterAsk = false" class="mb-12" prepend-icon="mdi-play">Als Teilnehmer:in</v-btn>
       </div>
 
-      <h1 class="text-4xl" v-else>Bitte warten</h1>
+      <div class="text-4xl w-full mb-24 p-6 flex flex-col text-center items-center gap-4" v-else>
+        <img :src=" '/quiz/inseln/i' + quiz.insel + '.svg' " alt="insel" class="w-24"/>
+        <div>
+          <h1 class="text-4xl my-4 font-bold" :style="{color: inseln[quiz.insel].color}">{{
+              inseln[quiz.insel].name
+            }}</h1>
+          <h2 class="text-2xl">{{ quiz.title }}</h2>
+        </div>
+      </div>
     </div>
-    <img src="/logo.svg" alt="icon" class="icon"
-         style="position:fixed;width:150px;left:50%;margin-left:-75px;bottom:25px">
+    <img src="/logo.svg" alt="icon" class="icon p-6 h-24 w-full"
+         style="position:fixed;left:0;bottom:0;right:0"/>
   </div>
 </template>
 <script setup>

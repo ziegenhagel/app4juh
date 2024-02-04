@@ -23,14 +23,12 @@
       <v-skeleton-loader type="list-item-avatar" v-for="i in 5" v-if="quizzes.length === 0"/>
       <template v-else>
         <v-list
+            id="quiz-list"
             class="space-y-2"
             item-props v-model="currentQuiz" :items="quizzes"/>
-        <v-btn class="w-full"
-               @click="createQuiz()"
-               variant="tonal" prepend-icon="mdi-plus">Quiz erstellen
-        </v-btn>
       </template>
       <v-spacer/>
+      <v-btn class="w-full mt-1" @click="createQuiz()" variant="tonal" prepend-icon="mdi-plus">Quiz erstellen </v-btn>
     </div>
 
     <template #append>
@@ -43,8 +41,13 @@
     </template>
   </v-navigation-drawer>
   <div class="mt-12 px-4" v-if="currentQuiz">
-    <div class="flex">
-      <h1 class="mb-4 text-3xl font-bold">{{ currentQuiz?.title }}</h1>
+    <div class="flex items-center gap-4 justify-between pb-4">
+      <img :src="'/quiz/inseln/i' + (currentQuiz.insel ?? 0) + '.svg'" class="w-16 h-16 rounded-full"/>
+      <div>
+        <h1 class="text-3xl font-bold" :style="'color: ' + inseln[currentQuiz.insel ?? 0].color">
+          {{ currentQuiz.title }}</h1>
+        <h3 class="text-xl font-semibold">{{ currentQuiz.subtitle }}</h3>
+      </div>
       <v-spacer/>
       <v-btn @click="saveCurrentQuiz"
              :loading="loading"
@@ -59,7 +62,7 @@
     <!-- AKTUELLE FRAGE -->
     <v-card v-for="(question, index) in currentQuiz.questions" :key="index" class="mb-4 border" variant="flat">
       <v-card-text>
-        <v-text-field v-model="question.title" :label="'Frage  ' + (index + 1)" variant="solo" class="mt-2 w-full"/>
+        <v-text-field v-model="question.title" :label="'Frage  ' + (index + 1)" variant="outlined" class="mt-2 w-full"/>
         <div class="flex flex-wrap space-x-2">
           <!--        <v-btn prepend-icon="mdi-plus" @click="addAnswer(question)" color="primary"> Antwort hinzufügen</v-btn>-->
           <!--        <v-btn prepend-icon="mdi-delete" color="error" @click="deleteAnswer(question)"> Antwort löschen</v-btn>-->
@@ -83,7 +86,7 @@
 
     <!-- FRAGE HINZUFÜGEN -->
     <div class="flex gap-2">
-      <v-btn @click="shareQuiz" class="mb-10" variant="tonal" color="#010545" prepend-icon="mdi-share">Quiz teilen
+      <v-btn @click="shareQuiz" class="mb-10" variant="tonal" color="#010545" prepend-icon="mdi-share">Teilen
       </v-btn>
       <v-btn @click="showQr" class="mb-10" variant="tonal" color="#010545" prepend-icon="mdi-qrcode">
         In PowerPoint
@@ -91,7 +94,7 @@
       </v-btn>
       <v-spacer/>
       <!-- quiz löschen -->
-      <v-btn @click="deleteQuiz" class="mb-10" color="#eb003c" variant="flat" prepend-icon="mdi-delete">Quiz löschen
+      <v-btn @click="deleteQuiz" class="mb-10" color="#eb003c" variant="flat" prepend-icon="mdi-delete">Löschen
       </v-btn>
       <v-btn @click="addQuestion" class="mb-2" color="#010545" variant="flat" prepend-icon="mdi-plus">Frage hinzufügen
       </v-btn>
@@ -136,32 +139,79 @@ const getQuizzes = async () => {
   console.log('userQuizzes', userQuizzes)
   quizzes.value = userQuizzes.map(quiz => ({
     title: quiz.title,
+    color: inseln[quiz.insel ?? 0].color,
     subtitle: quiz.subtitle,
     value: quiz.$id,
-    prependIcon: 'mdi-format-list-text',
+    // prependIcon: 'mdi-format-list-text',
+    // have an image
+    prependAvatar: '/quiz/inseln/i' + quiz.insel + '.svg',
+    // color: inseln[quiz.insel ?? 0].color,
     onclick: () => {
       console.log('quiz', quiz)
       currentQuiz.value = {
         title: quiz.title,
         subtitle: quiz.subtitle,
+        insel: quiz.insel,
         questions: JSON.parse(quiz.questions),
         $id: quiz.$id,
       }
     }
   }))
 }
+
+import {inseln} from "~/composables/inseln"
+
 const createQuiz = async (pOld = null) => {
   // get title and subttle via swal
   let formValues
   console.log('pOld', pOld)
   if (!pOld) {
 
-    const {value: formValuesT} = await Swal.fire({
-      title: 'Quiz erstellen',
+    // get quiz insel index via swal
+    const inselIndex = await Swal.fire({
+      title: 'Insel für das Quiz auswählen',
+      width: 600,
       html:
-          '<input id="swal-input1" required class="swal2-input" placeholder="Titel">' +
-          '<input id="swal-input2" required class="swal2-input" placeholder="Untertitel">',
+          '<div id="inselselect" class="grid grid-cols-4 gap-x-4 gap-y-8 my-4">' +
+          inseln.map((insel, index) => {
+            return '<div class="flex flex-col gap-4 items-center cursor-pointer hover:font-bold' +
+                // on click set inselIndex, make font bold and clear all others
+                '" onclick="document.getElementById(\'inselIndex\').value = ' + index + '; document.getElementById(\'inselselect\').querySelectorAll(\'.flex\').forEach(el => el.style.fontWeight = \'normal\')' +
+                '; this.style.fontWeight = \'bold\'">' +
+                '<img src="/quiz/inseln/i' + index + '.svg" class="w-16 h-16 rounded-full" />' +
+                '<span class="text-center">' + insel.name + '</span>' +
+                '</div>'
+          }).join('')
+          +
+          '</div>' +
+          '<input id="inselIndex" type="hidden" class="swal2-input" placeholder="Insel Index">',
+      // text auf button
+      confirmButtonText: 'Weiter',
       focusConfirm: false,
+      preConfirm: () => {
+        return document.getElementById('inselIndex').value
+      }
+    })
+
+    // wenn nichts ausgewählt wurde, dann abbrechen
+    if (inselIndex.value === undefined) {
+      return
+    }
+
+    const {value: formValuesT} = await Swal.fire({
+      // title: 'Quiz erstellen',
+      html:
+          '<div class="flex mt-4 gap-4 items-center">' +
+          '<img src="/quiz/inseln/i' + inselIndex.value + '.svg" class="w-16 h-16 rounded-full" />' +
+          '<div class="flex flex-col items-start"><h1 class="text-2xl text-left w-full font-bold">Quiz erstellen</h1>' +
+          '<h2 class="font-semibold w-full text-left text-xl">' + inseln[inselIndex.value].name + '</h2>' +
+          '</div>' +
+          '</div>' +
+          '<input id="swal-input1" required class="mx-1 swal2-input" placeholder="Titel">' +
+          '<input id="swal-input2" required class="mx-1 swal2-input" placeholder="Untertitel">',
+      focusConfirm: false,
+      // button text
+      confirmButtonText: 'Quiz erstellen',
       preConfirm: () => {
         return [
           document.getElementById('swal-input1').value,
@@ -169,9 +219,10 @@ const createQuiz = async (pOld = null) => {
         ]
       }
     })
-    formValues = formValuesT
+    console.log('insel index:', inselIndex)
+    formValues = [...formValuesT, inselIndex.value]
   } else {
-    formValues = [pOld.title, pOld.subtitle]
+    formValues = [pOld.title, pOld.subtitle, pOld.insel || 0]
   }
 
   // create id
@@ -181,6 +232,7 @@ const createQuiz = async (pOld = null) => {
       {
         title: formValues[0],
         subtitle: formValues[1],
+        insel: formValues[2],
         questions:
             pOld ? pOld.questions :
                 '[{"title":"Neue Frage #1","answers":[{"title":"Antwort 1","correct":true},{"title":"Antwort 2","correct":false},{"title":"Antwort 3","correct":false},{"title":"Antwort 4","correct":false}]}]'
@@ -369,24 +421,83 @@ const showQr = async () => {
     showConfirmButton: false
   })
 }
+
+const deleteQuiz = async () => {
+  const {isConfirmed} = await Swal.fire({
+    title: 'Quiz löschen',
+    html: 'Bist du sicher, dass du das Quiz <b>' + currentQuiz.value.title + '</b> löschen möchtest?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ja, löschen',
+    cancelButtonText: 'Abbrechen'
+  })
+
+  if (isConfirmed) {
+    // delete quiz
+    const data = await appwrite.database.deleteDocument('quiz', 'quizzes', currentQuiz.value.$id)
+    console.log('data', data)
+
+    // delete user_has_quiz
+    const user = await appwrite.account.get()
+    const userHasQuiz = await appwrite.database.listDocuments('quiz', 'user_has_quiz')
+    const userHasQuizToDelete = userHasQuiz.documents.find(userHasQuiz => userHasQuiz.quiz === currentQuiz.value.$id)
+    console.log('userHasQuizToDelete', userHasQuizToDelete)
+    const userHasQuizDeleted = await appwrite.database.deleteDocument('quiz', 'user_has_quiz', userHasQuizToDelete.$id)
+    console.log('userHasQuizDeleted', userHasQuizDeleted)
+
+    // tell user that quiz was deleted
+    await Swal.fire({
+      title: 'Quiz gelöscht',
+      html: 'Das Quiz <b>' + currentQuiz.value.title + '</b> wurde gelöscht',
+      icon: 'success',
+      timer: 5000,
+      showConfirmButton: false
+    })
+
+    // get quizzes again
+    await getQuizzes()
+    currentQuiz.value = null
+  }
+}
 </script>
 
 <style>
-.v-main { @apply bg-gray-100; }
-  .v-btn {
-    font-size: 1.1em;
+.v-main {
+  @apply bg-gray-100;
+}
+
+.v-btn {
+  font-size: 1.1em;
   text-transform: none;
 }
-  div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
-    background-color: #eb003c !important;
+
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
+  background-color: #eb003c !important;
   border-radius: 0.5em !important;
 }
 
-  .v-switch__track.bg-green{
-    background-color: #b2d200 !important;
+.v-switch__track.bg-green {
+  background-color: #b2d200 !important;
   //border: 2px solid #000548 !important;
 }
-  .v-switch__thumb{
+
+.v-switch__thumb {
   //background-color: #eb003c !important;
+}
+
+.swal2-confirm {
+  outline: none !important;
+  box-shadow: 0 0 0 3px #eb003c44 !important;
+  font-size: 1.1em !important;
+}
+
+#quiz-list {
+  .v-list-item {
+    @apply py-2 px-2 rounded;
+
+    .v-list-item-title {
+      @apply font-bold;
+    }
+  }
 }
 </style>
