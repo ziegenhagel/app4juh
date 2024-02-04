@@ -7,30 +7,41 @@
     </v-app-bar-title>
   </v-app-bar>
 
-  <div class="mt-6">
+  <div class="max-w-lg mx-auto px-4 mt-20">
+    <h1 class="text-4xl mb-6">Anmelden</h1>
     <v-text-field
         label="E-Mail"
         v-model="email"
+        variant="outlined"
         type="email"/>
 
     <v-text-field
         label="Passwort"
+        variant="outlined"
         v-model="password"
         type="password"/>
 
-    <v-btn @click="signIn">Anmelden</v-btn>
+    <v-btn
+        color="#EB003C"
+        size="large"
+        :loading="loading"
+        prepend-icon="mdi-login"
+        @click="signIn">Anmelden</v-btn>
   </div>
 </template>
 <script setup>
 definePageMeta({layout: 'quiz'})
 const email = ref('royudo@googlemail.com')
 const password = ref('Akkon1952!')
+const loading = ref(false)
 const appwrite = useAppwrite()
 
 const signIn = async () => {
+  loading.value = true
   const data = await appwrite.account.createEmailSession(email.value, password.value)
   console.log('data', data)
   await checkLogin()
+  loading.value = false
 }
 
 // check if user is logged in appwrite.account.get()

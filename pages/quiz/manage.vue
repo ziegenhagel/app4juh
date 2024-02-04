@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar color="#EB003C">
+  <v-app-bar color="#eb003c">
     <div style="background:#000548" class="p-2 h-full">
       <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
     </div>
@@ -10,7 +10,8 @@
     <template #append>
       <v-btn @click="play"
              v-if="currentQuiz"
-             variant="elevated" prepend-icon="mdi-play">Quiz starten
+             color="#deff00"
+             variant="flat" prepend-icon="mdi-play">Quiz starten
       </v-btn>
       <!--      <v-btn @click="logout" color="white"  variant="flat" prepend-icon="mdi-logout">Ausloggen</v-btn>-->
     </template>
@@ -25,7 +26,7 @@
             class="space-y-2"
             item-props v-model="currentQuiz" :items="quizzes"/>
         <v-btn class="w-full"
-               @click="createQuiz"
+               @click="createQuiz()"
                variant="tonal" prepend-icon="mdi-plus">Quiz erstellen
         </v-btn>
       </template>
@@ -34,19 +35,20 @@
 
     <template #append>
       <div class="p-2">
-        <v-btn @click="importQuiz" class="w-full" color="primary" variant="flat" prepend-icon="mdi-import">Quiz
+        <v-btn @click="importQuiz" class="w-full" size="large" color="#010545" variant="flat" prepend-icon="mdi-import">
+          Quiz
           importieren
         </v-btn>
       </div>
     </template>
   </v-navigation-drawer>
-  <div class="mt-12" v-if="currentQuiz">
+  <div class="mt-12 px-4" v-if="currentQuiz">
     <div class="flex">
       <h1 class="mb-4 text-3xl font-bold">{{ currentQuiz?.title }}</h1>
       <v-spacer/>
       <v-btn @click="saveCurrentQuiz"
              :loading="loading"
-             class="mb-4" color="primary" prepend-icon="mdi-content-save">Speichern
+             class="mb-4" color="#010545" prepend-icon="mdi-content-save">Speichern
       </v-btn>
     </div>
     <!--    <v-select v-model="currentQuestion" :items="currentQuiz.questions" item-text="title" item-value="value"-->
@@ -55,21 +57,24 @@
     <!--              class="w-full"/>-->
 
     <!-- AKTUELLE FRAGE -->
-    <v-card v-for="(question, index) in currentQuiz.questions" :key="index" class="mb-4">
+    <v-card v-for="(question, index) in currentQuiz.questions" :key="index" class="mb-4 border" variant="flat">
       <v-card-text>
-        <v-text-field v-model="question.title" :label="'Frage  ' + (index + 1)" variant="outlined" class="mt-2 w-full"/>
+        <v-text-field v-model="question.title" :label="'Frage  ' + (index + 1)" variant="solo" class="mt-2 w-full"/>
         <div class="flex flex-wrap space-x-2">
           <!--        <v-btn prepend-icon="mdi-plus" @click="addAnswer(question)" color="primary"> Antwort hinzufügen</v-btn>-->
           <!--        <v-btn prepend-icon="mdi-delete" color="error" @click="deleteAnswer(question)"> Antwort löschen</v-btn>-->
         </div>
         <div class="mt-4 md:grid md:grid-cols-2 md:gap-x-4">
           <div v-for="(answer, index) in question.answers" class="flex">
-            <v-text-field :key="index" v-model="answer.title" label="Antwort"
-                          variant="outlined" class="me-2 w-full"/>
+            <v-text-field :key="index" v-model="answer.title"
+                          :label="'Antwort ' + ['A', 'B', 'C', 'D', 'E', 'F'][index]"
+                          :items="['A', 'B', 'C', 'D', 'E', 'F']" :item-text="item => item" :item-value="item => item"
+                          :rules="[v => !!v || 'Eingabe erforderlich']" variant="outlined" class="me-2 w-full"/>
             <v-switch v-model="answer.correct" color="green" inset/>
           </div>
         </div>
         <v-alert density="compact" v-if="question.answers?.filter(answer => answer.correct).length === 0"
+                 color="#eb003c"
                  type="warning">
           Es muss mindestens eine richtige Antwort geben!
         </v-alert>
@@ -78,9 +83,18 @@
 
     <!-- FRAGE HINZUFÜGEN -->
     <div class="flex gap-2">
-      <v-btn @click="shareQuiz" class="mb-10" color="" prepend-icon="mdi-share">Quiz teilen</v-btn>
+      <v-btn @click="shareQuiz" class="mb-10" variant="tonal" color="#010545" prepend-icon="mdi-share">Quiz teilen
+      </v-btn>
+      <v-btn @click="showQr" class="mb-10" variant="tonal" color="#010545" prepend-icon="mdi-qrcode">
+        In PowerPoint
+        einfügen
+      </v-btn>
       <v-spacer/>
-      <v-btn @click="addQuestion" class="mb-2" color="primary" prepend-icon="mdi-plus">Frage hinzufügen</v-btn>
+      <!-- quiz löschen -->
+      <v-btn @click="deleteQuiz" class="mb-10" color="#eb003c" variant="flat" prepend-icon="mdi-delete">Quiz löschen
+      </v-btn>
+      <v-btn @click="addQuestion" class="mb-2" color="#010545" variant="flat" prepend-icon="mdi-plus">Frage hinzufügen
+      </v-btn>
     </div>
 
   </div>
@@ -139,12 +153,14 @@ const getQuizzes = async () => {
 const createQuiz = async (pOld = null) => {
   // get title and subttle via swal
   let formValues
+  console.log('pOld', pOld)
   if (!pOld) {
+
     const {value: formValuesT} = await Swal.fire({
       title: 'Quiz erstellen',
       html:
-          '<input id="swal-input1" class="swal2-input" placeholder="Titel">' +
-          '<input id="swal-input2" class="swal2-input" placeholder="Untertitel">',
+          '<input id="swal-input1" required class="swal2-input" placeholder="Titel">' +
+          '<input id="swal-input2" required class="swal2-input" placeholder="Untertitel">',
       focusConfirm: false,
       preConfirm: () => {
         return [
@@ -182,10 +198,22 @@ const createQuiz = async (pOld = null) => {
       })
   console.log('userHasQuiz', userHasQuiz)
 
+  // wenn das alles geklappt hat, dann sage dem user, dass das quiz erstellt wurde
+  await Swal.fire({
+    title: 'Quiz erstellt',
+    icon: 'success',
+    timer: 2000,
+    showConfirmButton: false
+  })
+
+
   await getQuizzes()
 
   // then select quiz
   currentQuiz.value = quizzes.value.find(quiz => quiz.value === docId)
+
+  await nextTick()
+
 }
 
 const logout = async () => {
@@ -322,10 +350,43 @@ const importQuiz = async () => {
   })
 
 }
+
+const currentQR = computed(() => {
+  return window.location.origin + '/quiz/play/' + currentQuiz.value.$id + '/pp-' + Math.random().toString(36).substring(7)
+})
+const showQr = async () => {
+  // zeige die id zum teilen an
+  await Swal.fire({
+    // title: 'Kopiere diesen QR Code und füge ihn in PowerPoint ein',
+    // use google charts api, the qr code is THE CURRENT SITE URL, then /quiz/play/ + quiz id + / +  create random long session id
+    html: '<div class="w-full flex flex-col items-center justify-center">' +
+        '<h2 class="text-2xl font-bold">Kopiere den folgenden QR Code und füge ihn in PowerPoint ein:</h2>' +
+        '<img src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' + currentQR.value + '"/>' +
+        '<p>Du musst diesen QR Code dann im Kurs als erster scannen, um das Quiz zu moderieren.</p>' +
+        '</div>',
+    // icon: 'info',
+    // timer: 5000,
+    showConfirmButton: false
+  })
+}
 </script>
 
 <style>
-.v-main {
-  @apply bg-gray-100;
+.v-main { @apply bg-gray-100; }
+  .v-btn {
+    font-size: 1.1em;
+  text-transform: none;
+}
+  div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
+    background-color: #eb003c !important;
+  border-radius: 0.5em !important;
+}
+
+  .v-switch__track.bg-green{
+    background-color: #b2d200 !important;
+  //border: 2px solid #000548 !important;
+}
+  .v-switch__thumb{
+  //background-color: #eb003c !important;
 }
 </style>
