@@ -103,7 +103,7 @@
   </div>
 </template>
 <script setup>
-import {Client, Databases, ID} from "appwrite";
+import {Client, Databases, ID, Query} from "appwrite";
 
 definePageMeta({layout: 'quiz'})
 const appwrite = useAppwrite()
@@ -124,10 +124,12 @@ const checkLogin = async () => {
   }
 }
 const getQuizzes = async () => {
-  const allquizzes = await appwrite.database.listDocuments('quiz', 'quizzes')
+  const user = await appwrite.account.get()
+  const allquizzes = await appwrite.database.listDocuments('quiz', 'quizzes', [
+    Query.equal('user', user.$id)
+  ])
   console.log('allquizzes', allquizzes)
   // get quizzes from user_has_quiz
-  const user = await appwrite.account.get()
   const userHasQuiz = await appwrite.database.listDocuments('quiz', 'user_has_quiz')
 
   console.log('userHasQuiz', userHasQuiz)
@@ -225,6 +227,7 @@ const createQuiz = async (pOld = null) => {
     formValues = [pOld.title, pOld.subtitle, pOld.insel || 0]
   }
 
+  const user = await appwrite.account.get()
   // create id
   const docId = ID.unique()
   const data = await appwrite.database.createDocument('quiz', 'quizzes',
@@ -233,6 +236,7 @@ const createQuiz = async (pOld = null) => {
         title: formValues[0],
         subtitle: formValues[1],
         insel: formValues[2],
+        user: user.$id,
         questions:
             pOld ? pOld.questions :
                 '[{"title":"Neue Frage #1","answers":[{"title":"Antwort 1","correct":true},{"title":"Antwort 2","correct":false},{"title":"Antwort 3","correct":false},{"title":"Antwort 4","correct":false}]}]'
@@ -240,7 +244,6 @@ const createQuiz = async (pOld = null) => {
   console.log('data', data)
   console.log('docId', docId)
 
-  const user = await appwrite.account.get()
   // then add to user_has_quiz
   const userHasQuiz = await appwrite.database.createDocument('quiz', 'user_has_quiz',
       ID.unique(),
