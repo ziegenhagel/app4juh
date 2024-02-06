@@ -13,7 +13,9 @@
              color="#deff00"
              variant="flat" prepend-icon="mdi-play">Quiz starten
       </v-btn>
-      <!--      <v-btn @click="logout" color="white"  variant="flat" prepend-icon="mdi-logout">Ausloggen</v-btn>-->
+      <v-btn @click="logout"
+             v-if="!currentQuiz"
+             color="white" variant="flat" prepend-icon="mdi-logout">Ausloggen</v-btn>
     </template>
 
   </v-app-bar>
@@ -28,7 +30,7 @@
             item-props v-model="currentQuiz" :items="quizzes"/>
       </template>
       <v-spacer/>
-      <v-btn class="w-full mt-1" @click="createQuiz()" variant="tonal" prepend-icon="mdi-plus">Quiz erstellen </v-btn>
+      <v-btn class="w-full mt-1" @click="createQuiz()" variant="tonal" prepend-icon="mdi-plus">Quiz erstellen</v-btn>
     </div>
 
     <template #append>
@@ -40,7 +42,7 @@
       </div>
     </template>
   </v-navigation-drawer>
-  <div class="mt-12 px-4" v-if="currentQuiz">
+  <div class="mt-12 px-4" v-if="currentQuiz" :key="currentQuiz.$id">
     <div class="flex items-center gap-4 justify-between pb-4">
       <img :src="'/quiz/inseln/i' + (currentQuiz.insel ?? 0) + '.svg'" class="w-16 h-16 rounded-full"/>
       <div>
@@ -136,6 +138,7 @@ const getQuizzes = async () => {
 
   // now filter
   const userQuizzes = allquizzes.documents.filter(quiz => {
+    return true
     return userHasQuiz.documents.find(userHasQuiz => userHasQuiz.quiz === quiz.$id)
   })
   console.log('userQuizzes', userQuizzes)
@@ -162,6 +165,11 @@ const getQuizzes = async () => {
 }
 
 import {inseln} from "~/composables/inseln"
+
+const logout = async () => {
+  await appwrite.account.deleteSession('current')
+  navigateTo('/quiz')
+}
 
 const createQuiz = async (pOld = null) => {
   // get title and subttle via swal
@@ -228,7 +236,7 @@ const createQuiz = async (pOld = null) => {
   }
 
   const user = await appwrite.account.get()
-  // create id
+  // create uuid 4
   const docId = ID.unique()
   const data = await appwrite.database.createDocument('quiz', 'quizzes',
       docId,
@@ -264,37 +272,36 @@ const createQuiz = async (pOld = null) => {
 
   await getQuizzes()
 
-  // then select quiz
-  currentQuiz.value = quizzes.value.find(quiz => quiz.value === docId)
+  // then click the last element in the list
+  setTimeout(() => {
+    document.getElementById('quiz-list').querySelectorAll('.v-list-item')[document.getElementById('quiz-list').querySelectorAll('.v-list-item').length - 1].click()
+  }, 100)
 
   await nextTick()
 
 }
 
-const logout = async () => {
-  await appwrite.account.deleteSession('current')
-  navigateTo('/quiz')
-}
 
 const addQuestion = async () => {
+  const correct = Math.floor(Math.random() * 4)
   currentQuiz.value.questions.push({
     title: 'Neue Frage #' + (currentQuiz.value.questions.length + 1),
     answers: [
       {
         title: 'Antwort 1',
-        correct: false
+        correct: correct === 0
       },
       {
         title: 'Antwort 2',
-        correct: false
+        correct: correct === 1
       },
       {
         title: 'Antwort 3',
-        correct: false
+        correct: correct === 2
       },
       {
         title: 'Antwort 4',
-        correct: false
+        correct: correct === 3
       },
     ]
   })

@@ -107,46 +107,54 @@ const createAccount = async () => {
   }
   try {
     const data = await appwrite.account.create(ID.unique(), email.value, password.value)
+    // const data = {$id: '1234'} // TODO: remove this line
     console.log('data', data)
     loading.value = false
     if (data.$id) {
+
+
+      // kopiere alle quizeze vom aktuellen benutzer
+      const userId = user.$id
+
+      const quizzes = await appwrite.database.listDocuments('quiz', 'quizzes', [
+        Query.equal('user', userId)
+      ])
+      console.log('quizzes', quizzes)
+
+      console.log('quizzes', quizzes)
+
+      let titles = []
+      for (const quiz of quizzes.documents) {
+        const docId = ID.unique()
+        const newQuiz = appwrite.database.createDocument('quiz', 'quizzes',
+            docId,
+            {
+              title: quiz.title,
+              subtitle: quiz.subtitle,
+              user: data.$id,
+              questions: quiz.questions,
+              insel: quiz.insel,
+            })
+        console.log('newQuiz', newQuiz)
+
+        titles.push(quiz.title)
+      }
+
       Swal.fire({
         title: 'Account erstellt',
         html: 'Du kannst dich jetzt mit der E-mail <b>' + email.value + '</b> anmelden! Folgende Nachricht kannst Du dem Benutzer senden: <textarea class="border p-1 rounded w-full mt-3 h-24">' +
             'Hallo, \n' +
             'Dein Account für das Quiz im App4juh unter https://app4juh.de/ wurde erfolgreich erstellt. Die PIN ist 1044. Für die Quiz Verwaltung kannst Du dich mit deiner E-Mail-Adresse "' + email.value + '" und deinem Passwort "' + password.value + '" unter https://app4juh.de/quiz/ anmelden.\n' +
+            'Folgende Quizze wurden ebenfalls kopiert: ' + titles.join(', ') + '\n' +
             'Viel Spaß! \n' +
             user.name +
             '</textarea>',
 
         icon: 'success',
         confirmButtonText: 'Okay'
-      }).then(async () => {
-
-        // kopiere alle quizeze vom aktuellen benutzer
-        const userId = user.$id
-
-        const quizzes = await appwrite.database.listDocuments('quiz', 'quizzes', [
-          Query.equal('user', userId)
-        ])
-        console.log('quizzes', quizzes)
-
-        for (const quiz of quizzes.documents) {
-          const docId = ID.unique()
-          const newQuiz = await appwrite.database.createDocument('quiz', 'quizzes',
-              docId,
-              {
-            title: quiz.title,
-            subtitle: quiz.subtitle,
-            user: data.$id,
-            questions: quiz.questions,
-            insel: quiz.insel,
-          })
-          console.log('newQuiz', newQuiz)
-        }
-
-
       })
+
+
     } else {
       Swal.fire({
         title: 'Fehler',
