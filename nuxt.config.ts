@@ -27,10 +27,13 @@ export default defineNuxtConfig({
                 {name: "apple-mobile-web-app-title", content: "App4Juh"},
                 // favicon
                 {name: "msapplication-TileImage", content: "/image/app4juh.jpg"},
+                // aple icoin
+                {name: "apple-touch-icon", content: "/image/app4juh.jpg"},
 
 
             ],
-            link: [{rel: "icon", type: "image/x-icon", href: "/image/app4juh.jpg"}],
+            link: [{rel: "icon", type: "shortcut icon", href: "/image/app4juh.jpg"}],
+
         },
     },
 
