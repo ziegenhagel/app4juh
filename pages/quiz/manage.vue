@@ -15,7 +15,8 @@
       </v-btn>
       <v-btn @click="logout"
              v-if="!currentQuiz"
-             color="white" variant="flat" prepend-icon="mdi-logout">Ausloggen</v-btn>
+             color="white" variant="flat" prepend-icon="mdi-logout">Ausloggen
+      </v-btn>
     </template>
 
   </v-app-bar>
@@ -88,17 +89,18 @@
 
     <!-- FRAGE HINZUFÜGEN -->
     <div class="flex gap-2">
-      <v-btn @click="shareQuiz" class="mb-10" variant="tonal" color="#010545" prepend-icon="mdi-share">Teilen
-      </v-btn>
+      <v-btn @click="shareQuiz" class="mb-10" variant="tonal" color="#010545" prepend-icon="mdi-share">Teilen</v-btn>
       <v-btn @click="showQr" class="mb-10" variant="tonal" color="#010545" prepend-icon="mdi-qrcode">
-        In PowerPoint
-        einfügen
+        PowerPoint
+      </v-btn>
+      <v-btn @click="jsonImport" class="mb-10" variant="tonal" color="#010545" prepend-icon="mdi-code-json">
+        ChatGPT
       </v-btn>
       <v-spacer/>
       <!-- quiz löschen -->
       <v-btn @click="deleteQuiz" class="mb-10" color="#eb003c" variant="flat" prepend-icon="mdi-delete">Löschen
       </v-btn>
-      <v-btn @click="addQuestion" class="mb-2" color="#010545" variant="flat" prepend-icon="mdi-plus">Frage hinzufügen
+      <v-btn @click="addQuestion" class="mb-2" color="#010545" variant="flat" prepend-icon="mdi-plus">Frage
       </v-btn>
     </div>
 
@@ -169,6 +171,102 @@ import {inseln} from "~/composables/inseln"
 const logout = async () => {
   await appwrite.account.deleteSession('current')
   navigateTo('/quiz')
+}
+
+const jsonImport = async () => {
+
+  const prompt = `Erstelle ein interaktives Quiz für Teilnehmer eines Erste-Hilfe-Kurses, das als umfassende Wiederholung und Verständnisprüfung dient. Ziel ist es, die wichtigsten Erste-Hilfe-Prinzipien und -Maßnahmen zu festigen.
+
+Themengebiet: ${currentQuiz.value.title} - ${currentQuiz.value.subtitle} (und alles damit zusammenhängende)
+
+Struktur des Quizzes:
+Das Quiz soll aus 8 Fragen bestehen, jede mit vier Antwortmöglichkeiten (A, B, C, D), von denen nur eine korrekt ist.
+
+Formatierungsvorgabe für die Antwort (als JSON):
+{ "title": "Unfall Wiederholung", "subtitle": "Sicherung", "insel": 0, "questions": [ { "title": "Neue Frage #1", "answers": [ { "title": "Antwort 1", "correct": true }, { "title": "Antwort 2", "correct": false }, { "title": "Antwort 3", "correct": false }, { "title": "Antwort 4", "correct": false } ] } ]}
+
+Vermeide Kommentare. Antworte ausschliesslich mit dem JSON-Objekt.`
+
+  // sage dem user er soll den proompt einmal durch chatgpt jagen
+  await Swal.fire({
+    title: 'ChatGPT',
+    html: 'Kopiere den folgenden Text in ChatGPT:<br><br>' +
+        '<textarea class="w-full border rounded p-4">' + prompt + '</textarea>',
+    icon: 'info',
+  })
+
+
+  let jsonImport = null
+  // get json import text via swal
+  const {value} = await Swal.fire({
+    title: 'Quiz importieren',
+    html:
+        'Gib hier die JSON Antwort von ChatGPT ein:<br><br>' +
+        '<textarea id="swal-input1" class="w-full border rounded p-4" placeholder="JSON Antwort von ChatGPT"></textarea>',
+    focusConfirm: false,
+    preConfirm: () => {
+      return document.getElementById('swal-input1').value
+    }
+  })
+
+  try {
+    const data = JSON.parse(value)
+
+    // prüfe ob die struktur stimmt
+    if (!data.title || !data.subtitle || !data.questions) {
+      if(!data.title) console.error('Data.title fehlt', data.title)
+      if(!data.subtitle) console.error('Data.subtitle fehlt', data.subtitle)
+      if(!data.questions) console.error('Data.questions fehlt', data.questions)
+      console.error('JSON Antwort von ChatGPT hat nicht die richtige Struktur (1)')
+      throw new Error('JSON Antwort von ChatGPT hat nicht die richtige Struktur (1)')
+    }
+    // prüfe ob wir eine erste frage haben, und correct ein boolean ist
+    if (!data.questions[0].title || !data.questions[0].answers || !data.questions[0].answers[0].title || typeof data.questions[0].answers[0].correct !== 'boolean') {
+      if (!data.questions[0].title) console.error('Data.questions[0].title fehlt', data.questions[0].title)
+      if (!data.questions[0].answers) console.error('Data.questions[0].answers fehlt', data.questions[0].answers)
+      if (!data.questions[0].answers[0].title) console.error('Data.questions[0].answers[0].title fehlt', data.questions[0].answers[0].title)
+      if (!data.questions[0].answers[0].correct) console.error('Data.questions[0].answers[0].correct fehlt', data.questions[0].answers[0].correct)
+
+      console.error('JSON Antwort von ChatGPT hat nicht die richtige Struktur (2)')
+      throw new Error('JSON Antwort von ChatGPT hat nicht die richtige Struktur (2)')
+    }
+
+    currentQuiz.value = {
+      title: data.title,
+      subtitle: data.subtitle,
+      insel: data.insel,
+      questions: data.questions,
+      // behalten
+      $id: currentQuiz.value.$id
+    }
+
+    // frage ja/nein ob wir das aktuelle quiz einmal speichern wollen
+    const {value: formValues} = await Swal.fire({
+      title: 'Quiz importieren',
+      html: 'Das Quiz wurde erfolgreich importiert. Möchtest du es speichern?',
+      icon: 'success',
+      showCancelButton: true,
+      confirmButtonText: 'Speichern',
+      cancelButtonText: 'Abbrechen',
+    })
+
+    if (formValues) {
+      await saveCurrentQuiz()
+    }
+
+
+
+
+  } catch (e) {
+    console.error('json import error', e)
+    await Swal.fire({
+      title: 'Fehler',
+      html: 'Die JSON Antwort von ChatGPT konnte nicht verarbeitet werden. '+e.message,
+      icon: 'error',
+      timer: 5000,
+      showConfirmButton: false
+    })
+  }
 }
 
 const createQuiz = async (pOld = null) => {
