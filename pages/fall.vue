@@ -6,7 +6,7 @@
         <span class="font-bold">Fallbeispiel</span>
       </v-app-bar-title>
     </v-app-bar>
-    <main class="max-w-lg mx-auto px-4 mt-10">
+    <main class="max-w-lg pb-10 mx-auto px-4 mt-10">
 
       <template v-if="step==0">
         <h1 class="text-4xl mb-6">Fallbeispiele erzeugen</h1>
@@ -144,8 +144,21 @@ const submit = () => {
   // const api url
   const api = 'https://p2.faktorxmensch.com/api/service/app4juh/fall'
 
+  // have a swal that is loading forever and not closeable
+  Swal.fire({
+    title: 'Lade Fallbeispiel',
+    html: 'Dein Fallbeispiel wird generiert. Bitte warten...',
+    icon: 'info',
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    showConfirmButton: false,
+    showCancelButton: false,
+    showCloseButton: false,
+    showLoaderOnConfirm: true
+  })
+
   // post there in the for of the post body being {kursart, insel, zielgruppe, fall}
-  fetch(api, {
+  fetch(url+api, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
