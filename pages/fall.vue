@@ -82,7 +82,7 @@ const step = ref(0)
 const courses = [
   {
     title: 'DVB Busfahrer',
-    chatgpt_title: 'Erste Hilfe Kurs für DVB Busfahrer',
+    chatgpt_title: 'Erste Hilfe Kurs Speziell für DVB Busfahrer',
     short: 'DVB',
     icon: 'mdi-bus',
     color: '#e4b600'
@@ -137,39 +137,28 @@ const zuFall = () => {
   submit()
 }
 
-const submit = () => {
+const submit = async () => {
   console.log('form', form.value)
   // const proxy prefix url
   const url = 'https://cors.app4juh.de/'
   // const api url
   const api = 'https://p2.faktorxmensch.com/api/service/app4juh/fall'
 
-  // have a swal that is loading forever and not closeable
+  // have a swal that is loading forever and not closeable and only shows laoding
   Swal.fire({
-    title: 'Lade Fallbeispiel',
+    title: 'Wähle Fallbeispiel',
     html: 'Dein Fallbeispiel wird generiert. Bitte warten...',
-    icon: 'info',
     allowOutsideClick: false,
     allowEscapeKey: false,
     showConfirmButton: false,
-    showCancelButton: false,
-    showCloseButton: false,
-    showLoaderOnConfirm: true
+    willOpen: () => {
+      Swal.showLoading()
+    }
   })
 
   // post there in the for of the post body being {kursart, insel, zielgruppe, fall}
-  fetch(url+api, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      kursart: form.value.course?.title,
-      insel: form.value.insel?.name,
-      zielgruppe: form.value.zielgruppe,
-      fall: form.value.fallauswahl
-    })
-  }).then(response => response.json())
+  fetch(url + api + '?kursart=' + encodeURIComponent(form.value.course.chatgpt_title) + '&insel=' + encodeURIComponent(form.value.insel?.name) + '&zielgruppe=' + encodeURIComponent(form.value.zielgruppe) + '&fall=' + encodeURIComponent(form.value.fallauswahl)
+  ).then(response => response.json())
       .then(async data => {
         console.log('Success:', data);
         /* beispiel antwort
