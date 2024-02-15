@@ -170,7 +170,7 @@ onMounted(() => {
 })
 
 const startenBtn = async () => {
-  // await clearQuiz()
+  console.log('startenBtn')
   await next()
   ready.value = true
 }
