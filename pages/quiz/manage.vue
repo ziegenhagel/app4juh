@@ -190,9 +190,11 @@ Vermeide Kommentare. Antworte ausschliesslich mit dem JSON-Objekt.`
   // sage dem user er soll den proompt einmal durch chatgpt jagen
   await Swal.fire({
     title: 'ChatGPT',
-    html: 'Kopiere den folgenden Text in ChatGPT:<br><br>' +
+    html: 'Kopiere den folgenden Text in <a href="https://chat.openai.com/" target="_blank" class="underline">ChatGPT</a>:<br><br>' +
         '<textarea class="w-full border rounded p-4">' + prompt + '</textarea>',
     icon: 'info',
+    // ja have ich rüber kopiert
+    confirmButtonText: 'Ja, habe ich kopiert'
   })
 
 
@@ -203,6 +205,8 @@ Vermeide Kommentare. Antworte ausschliesslich mit dem JSON-Objekt.`
     html:
         'Gib hier die JSON Antwort von ChatGPT ein:<br><br>' +
         '<textarea id="swal-input1" class="w-full border rounded p-4" placeholder="JSON Antwort von ChatGPT"></textarea>',
+    // ersetze mit dieser antwort das gesamte quiz
+    confirmButtonText: 'Ersetze das gesamte Quiz mit dieser Antwort',
     focusConfirm: false,
     preConfirm: () => {
       return document.getElementById('swal-input1').value

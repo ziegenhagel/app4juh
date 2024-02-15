@@ -92,6 +92,7 @@ const data = ref([
     disabled: false,
     subtitle: 'Teile Dateien mit anderen',
     url: 'https://pairdrop.net'
+    //https://qr.gofxm.de/
   },
   {
     title: 'Fallbeispiele',

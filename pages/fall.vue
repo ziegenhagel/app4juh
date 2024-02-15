@@ -114,7 +114,7 @@ const courses = [
   },
   {
     title: 'Sanitätshelfer',
-    chatgpt_title: 'Sanitätshelfer Qualifikation in 87 UE',
+    chatgpt_title: 'Sanitätshelfer Qualifikations Kurs in 87 UE (Behandlung mit xABCDE, Samplers, etc.)',
     short: 'SanH',
     icon: 'mdi-hospital-building',
     color: '#4b5257'
