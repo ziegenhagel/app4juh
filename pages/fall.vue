@@ -3,20 +3,20 @@
     <v-app-bar color="#eb003c" dark>
       <img src="/image/app4juh.svg" alt="App4Juh Logo" class="w-32"/>
       <v-app-bar-title>
-        <span class="font-bold">Fallbeispiel</span>
+        <span class="font-bold">Fall</span> erstellen
       </v-app-bar-title>
     </v-app-bar>
     <main class="max-w-lg pb-10 mx-auto px-4 mt-10">
 
       <template v-if="step==0">
-        <h1 class="text-4xl mb-6">Fallbeispiele erzeugen</h1>
-        <h2 class="text-2xl mt-4 mb-6">Was für einen Kurs hast Du heute?</h2>
+        <h1 class="text-4xl mb-6">Einstellungen</h1>
+        <h2 class="text-2xl mt-4 mb-6">Welchen Kurs machst du?</h2>
         <div class="flex flex-col gap-4">
           <v-btn v-for="course in courses" @click="form.course = course" size="x-large" rounded
                  :color="course.color"
                  :variant="form.course?.title!== course.title
                  && form.course !== null
-                  ? 'outlined' : 'flat'"
+                  ? 'outlined' : 'elevated'"
                  class="w-full"
                  style="text-transform:none"
                  :prepend-icon="course.icon">
@@ -46,7 +46,7 @@
       </template>
       <template v-else-if="step==1">
         <h1 class="text-4xl mb-6">{{ form.course.title }}</h1>
-        <h2 class="text-2xl mt-4 mb-6">Welche Inseln sollen in den Fallbeispielen vorkommen?</h2>
+        <h2 class="text-2xl mt-4 mb-6">Auf welcher Insel bist du?</h2>
 
         <v-btn size="x-large" rounded
                color="#eb003c"
@@ -85,7 +85,7 @@ const courses = [
     chatgpt_title: 'Erste Hilfe Kurs Speziell für DVB Busfahrer',
     short: 'DVB',
     icon: 'mdi-bus',
-    color: '#e4b600'
+    color: '#ffb800'
 
   },
   {
@@ -100,14 +100,14 @@ const courses = [
     chatgpt_title: 'Erste Hilfe Kurs erweitert auf Schulsanitätsdienst Niveau',
     icon: 'mdi-school',
     short: 'SSD',
-    color: '#00a0e4'
+    color: '#2f7cc2'
   },
   {
     title: 'Sanitätshelfer',
     chatgpt_title: 'Sanitätshelfer Qualifikation in 87 UE',
     short: 'SanH',
     icon: 'mdi-hospital-building',
-    color: '#818181'
+    color: '#4b5257'
   }
 ]
 const form = ref({
