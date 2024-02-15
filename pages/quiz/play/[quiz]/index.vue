@@ -33,7 +33,7 @@
       </div>
     </div>
     <h1 class="text-4xl" v-else>{{ quiz.title }}</h1>
-    <v-btn @click="next" class="mt-8" prepend-icon="mdi-play">Starten! </v-btn>
+    <v-btn @click="startenBtn" class="mt-8" prepend-icon="mdi-play">Starten!</v-btn>
     <v-btn @click="clearQuiz" variant="text" class="m-2 position-fixed top-0 left-0" prepend-icon="mdi-replay"></v-btn>
   </div>
 
@@ -92,6 +92,7 @@ const status = ref('show_solution')
 const next = async () => {
   // wir zeigen die Antworten
   if (status.value === 'show_solution') {
+    console.log('status changed to show_question, new questionIndex', questionIndex.value)
     // Die User dürfen nun die nächste Frage anklicken
     questionIndex.value++
     if (questionIndex.value < quiz.value.questions.length) {
@@ -119,9 +120,11 @@ const next = async () => {
   } else {
     // wir zeigen die Frage
     status.value = 'show_solution'
+    console.log('status changed to show_solution')
 
   }
 
+  console.log('creating click freigabe')
   await appwrite.database.createDocument('quiz', 'clicks',
       ID.unique(),
       {
@@ -165,6 +168,12 @@ onMounted(() => {
   setupAppwriteClickListener()
   // next()
 })
+
+const startenBtn = async () => {
+  // await clearQuiz()
+  await next()
+  ready.value = true
+}
 </script>
 <style>
 .aus-liebe-zum-leben {
