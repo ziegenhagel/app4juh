@@ -15,7 +15,7 @@ export default defineNuxtConfig({
     /* have favicon and mobile web app capable and title App4Juh*/
     app: {
         head: {
-            title: "App4Juh",
+            title: "app4juh",
             meta: [
                 {charset: "utf-8"},
                 {name: "viewport", content: "width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no"},
@@ -23,7 +23,6 @@ export default defineNuxtConfig({
                 {name: "mobile-web-app-capable", content: "yes"},
                 {name: "apple-mobile-web-app-capable", content: "yes"},
                 {name: "apple-mobile-web-app-status-bar-style", content: "black"},
-                {name: "apple-mobile-web-app-title", content: "App4Juh"},
                 // favicon
                 {name: "msapplication-TileImage", content: "/image/app4juh.jpg"},
                 // aple icoin
