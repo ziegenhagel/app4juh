@@ -74,6 +74,7 @@ definePageMeta({layout: 'quiz'})
 const ready = ref(false)
 const url = computed(() => window.location.origin + '/quiz/play/' + quiz.value.$id + '/' + session)
 const urlQR = computed(() => `https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${url.value}`)
+
 const clearQuiz = async () => {
   // get all clicks from that quiz and session
   const res = await appwrite.database.listDocuments('quiz', 'clicks', [
@@ -82,6 +83,7 @@ const clearQuiz = async () => {
   ])
   // delete all from that quiz and session
   await Promise.all(res.documents.map(click => appwrite.database.deleteDocument('quiz', 'clicks', click.$id)))
+  console.log('got quiz and session clicks', quiz.value, session)
   ready.value = true
 }
 const questionIndex = ref(-1)
@@ -160,7 +162,7 @@ const setPresenter = async () => {
 
 setPresenter()
 onMounted(() => {
-  clearQuiz()
+  // clearQuiz()
   setupAppwriteClickListener()
   // next()
 })
