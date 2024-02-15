@@ -23,6 +23,9 @@ export default defineNuxtConfig({
                 {name: "mobile-web-app-capable", content: "yes"},
                 {name: "apple-mobile-web-app-capable", content: "yes"},
                 {name: "apple-mobile-web-app-status-bar-style", content: "black"},
+                // apple title is Apps
+                {name: "apple-mobile-web-app-title", content: "Apps"},
+
                 // favicon
                 {name: "msapplication-TileImage", content: "/image/app4juh.jpg"},
                 // aple icoin
