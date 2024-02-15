@@ -2,6 +2,8 @@
 </template>
 <script setup>
 onMounted(() => {
-  return navigateTo('/apps')
+  if(typeof window === 'undefined') return navigateTo('/apps')
+  window.location.href = '/apps'
+  // return navigateTo('/apps')
 })
 </script>
