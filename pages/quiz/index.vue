@@ -31,8 +31,8 @@
 </template>
 <script setup>
 definePageMeta({layout: 'quiz'})
-const email = ref('royudo@googlemail.com')
-const password = ref('Akkon1952!')
+const email = ref('')
+const password = ref('')
 const loading = ref(false)
 const appwrite = useAppwrite()
 

@@ -91,7 +91,7 @@ const data = ref([
   },
   {
     title: 'Quiz',
-    disabled: true,
+    disabled: false,
     subtitle: 'Quiz für die Ausbildung',
     url: 'https://quiz.app4juh.de',
   }
