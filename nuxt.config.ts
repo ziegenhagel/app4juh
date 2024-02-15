@@ -15,7 +15,7 @@ export default defineNuxtConfig({
     /* have favicon and mobile web app capable and title App4Juh*/
     app: {
         head: {
-            title: "Apps",
+            title: "App4Juh",
             meta: [
                 {charset: "utf-8"},
                 {name: "viewport", content: "width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no"},
