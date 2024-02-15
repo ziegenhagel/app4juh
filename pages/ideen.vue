@@ -21,4 +21,14 @@ const ideas = ['Insel 1, Strasse aufs Whiteboard zeichnen, dann Stückchenweise 
     'Immer im Unterricht mit Handschuhen arbeiten und Steril arbeiten',
     'Wald und Wiesenmedizin, wenn kein EH Koffer da ist - Selbstschutz Inhalte',
 ]
+useHead({
+  title: 'Ideen',
+  meta: [
+    {
+      hid: 'description',
+      name: 'description',
+      content: 'Notizen und Ideen für die Ausbildung'
+    }
+  ]
+})
 </script>

@@ -77,6 +77,16 @@
 <script setup>
 definePageMeta({layout: 'quiz'})
 import {inseln} from "~/composables/inseln"
+useHead({
+  title: 'Fälle',
+  meta: [
+    {
+      hid: 'description',
+      name: 'description',
+      content: 'Erstelle einen Fall für deinen Kurs'
+    }
+  ]
+})
 
 const step = ref(0)
 const courses = [

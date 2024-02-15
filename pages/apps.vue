@@ -17,7 +17,17 @@
 </template>
 <script setup>
 // import {ID, Client} from "appwrite";
+useHead({
+  title: 'Apps',
+  meta: [
+    {
+      hid: 'description',
+      name: 'description',
+      content: 'Apps der Johanniter-Unfall-Hilfe e.V.'
+    }
+  ]
 
+})
 
 // const client2 = new Client()
 //     .setEndpoint('https://appwrite.app4juh.de/v1')

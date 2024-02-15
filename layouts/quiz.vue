@@ -8,6 +8,16 @@
   </v-app>
 </template>
 <script setup lang="ts">
+useHead({
+  title: 'Quiz',
+  meta: [
+    {
+      hid: 'description',
+      name: 'description',
+      content: 'Quiz für Ausbildung'
+    }
+  ]
+})
 </script>
 <style>
 .v-application__wrap {

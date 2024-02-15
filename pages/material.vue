@@ -31,6 +31,15 @@
   </div>
 </template>
 <script setup>
+useHead({
+  title: 'Material',
+  meta: [
+    {
+      name: 'description',
+      content: 'Materialien für die Ausbildung'
+    }
+  ]
+})
 const shareID = 'faTU9fSo'
 const files = ref([])
 const corsURI = 'https://cors.app4juh.de/'
