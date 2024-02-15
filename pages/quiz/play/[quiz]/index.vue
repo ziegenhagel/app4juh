@@ -33,9 +33,9 @@
       </div>
     </div>
     <h1 class="text-4xl" v-else>{{ quiz.title }}</h1>
-    <v-btn
-        @click="next" class="my-8" prepend-icon="mdi-play">Starten!
-    </v-btn>
+    <v-btn @click="next" class="mt-8" prepend-icon="mdi-play">Starten! </v-btn>
+    <v-btn @click="clearQuiz" variant="text" class="my-2" prepend-icon="mdi-replay"
+    >Reset</v-btn>
   </div>
 
   <!-- CI -->
