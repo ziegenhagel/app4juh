@@ -65,7 +65,6 @@ const res = await appwrite.database.listDocuments('quiz', 'quizzes', [
   Query.equal('$id', route.params.quiz)
 ])
 
-
 // Schauen nach quiz+session in den clicks, ob schon ein has_presenter = true ist
 const presenter = await appwrite.database.listDocuments('quiz', 'clicks', [
   Query.equal('quiz', res.documents[0].$id),
@@ -91,18 +90,41 @@ const question = computed(() => quiz.value.questions?.[questionIndex.value])
 
 // ZUSTAND VARIABLEN
 const status = ref('show_question') // show_solution, waiting
-const finished = ref(false)
+const correctAnswers = ref(0)
+const wrongAnswers = ref(0)
 
 // ACTIONS
 const clickAnswer = async (answer) => {
 
-  Swal.fire({
-    title: question.value.answers[answer].title,
-    text: '... wurde als Antwort gespeichert.',
-    // icon: 'info',
-    showConfirmButton: false,
-    timer: 1500
-  })
+  // inc correct or wrong answers
+  if (question.value.answers[answer].correct) {
+    correctAnswers.value++
+    Swal.fire({
+      title: question.value.answers[answer].title,
+      text: 'Ist richtig!',
+      icon: 'success',
+      showConfirmButton: false,
+      timer: 1500
+    })
+  } else {
+    wrongAnswers.value++
+    Swal.fire({
+      title: question.value.answers[answer].title,
+      text: 'Ist leider falsch.',
+      icon: 'error',
+      showConfirmButton: false,
+      timer: 1500
+    })
+  }
+  console.log('Du hast ' + correctAnswers.value + ' von ' + (correctAnswers.value + wrongAnswers.value) + ' Fragen richtig beantwortet')
+
+  // Swal.fire({
+  //   title: question.value.answers[answer].title,
+  //   text: '... wurde als Antwort gespeichert.',
+  //   // icon: 'info',
+  //   showConfirmButton: false,
+  //   timer: 1500
+  // })
 
   console.log('clickAnswer', answer)
   if (status.value !== 'show_question') return
