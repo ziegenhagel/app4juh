@@ -35,9 +35,10 @@ export const inseln = [
         color: '#8EC36F'
     },
     {
-        name: 'Vorbeugen',
+        name: 'Sonstige',
         fall:false,
-        color: '#E4003A'
+    //johaniter balu
+        color: '#010646'
     }
 ]
 
