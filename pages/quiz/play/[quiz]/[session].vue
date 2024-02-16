@@ -23,6 +23,7 @@
          class="h-full absolute inset-0 w-full flex-col flex justify-center items-center bg-gray-100">
       <img :src=" '/quiz/inseln/i' + quiz.insel + '.svg' " alt="insel" class="w-24 mb-6"/>
       <h1 class="text-3xl font-medium" :style="{color: inseln[quiz.insel].color}">Gratulation!</h1>
+      <h2 class="text-xl px-5 mt-2 text-center">{{ correctAnswers }} von {{ correctAnswers + wrongAnswers }} Fragen richtig beantwortet</h2>
     </div>
     <div v-else
          class="h-full absolute inset-0 w-full flex-col flex justify-center items-center bg-gray-100">
