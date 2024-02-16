@@ -144,6 +144,13 @@ const clickAnswer = async (answer) => {
 
 
 const setupAppwriteClickListener = () => {
+  // ask before leaving the website
+  if(typeof window !== 'undefined')
+  window.onbeforeunload = function () {
+    window.alert('Möchtest du die Seite wirklich verlassen?')
+    return 'Möchtest du die Seite wirklich verlassen?'
+  }
+
   console.log('setupAppwriteClickListener')
   client.subscribe('databases.quiz.collections.clicks.documents', async (event) => {
     if (event.payload.session === route.params.session && event.payload.quiz === quiz.value.$id) {
