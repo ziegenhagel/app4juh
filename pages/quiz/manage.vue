@@ -93,9 +93,14 @@
       <v-btn @click="showQr" class="mb-10" variant="tonal" color="#010545" prepend-icon="mdi-qrcode">
         PowerPoint
       </v-btn>
-      <v-btn @click="jsonImport" class="mb-10" variant="tonal" color="#010545" prepend-icon="mdi-code-json">
-        ChatGPT
-      </v-btn>
+      <template v-if="advanced">
+        <v-spacer/>
+        <v-btn @click="jsonExport" class="mb-10" variant="tonal" color="#010545" prepend-icon="mdi-export"> Export
+        </v-btn>
+        <v-btn @click="jsonImport" class="mb-10" variant="tonal" color="#010545" prepend-icon="mdi-import">
+          ChatGPT
+        </v-btn>
+      </template>
       <v-spacer/>
       <!-- quiz löschen -->
       <v-btn @click="deleteQuiz" class="mb-10" color="#eb003c" variant="flat" prepend-icon="mdi-delete">Löschen
@@ -173,6 +178,31 @@ const logout = async () => {
   navigateTo('/quiz')
 }
 
+const jsonExport = async () => {
+
+  // display as swal teaxtear
+  const {value: formValues} = await Swal.fire({
+    title: 'Quiz exportieren',
+    html:
+        '<textarea id="swal-input1" class="w-full border rounded p-4" placeholder="JSON Export">' + JSON.stringify(currentQuiz.value) + '</textarea>',
+    focusConfirm: false,
+    preConfirm: () => {
+      return document.getElementById('swal-input1').value
+    }
+  })
+
+
+  return
+  const json = JSON.stringify(currentQuiz.value)
+  const blob = new Blob([json], {type: 'application/json'})
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = currentQuiz.value.title + '.json'
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
 const jsonImport = async () => {
 
   const prompt = `Erstelle ein interaktives Quiz für Teilnehmer eines Erste-Hilfe-Kurses, das als umfassende Wiederholung und Verständnisprüfung dient. Ziel ist es, die wichtigsten Erste-Hilfe-Prinzipien und -Maßnahmen zu festigen.
@@ -218,9 +248,9 @@ Vermeide Kommentare. Antworte ausschliesslich mit dem JSON-Objekt.`
 
     // prüfe ob die struktur stimmt
     if (!data.title || !data.subtitle || !data.questions) {
-      if(!data.title) console.error('Data.title fehlt', data.title)
-      if(!data.subtitle) console.error('Data.subtitle fehlt', data.subtitle)
-      if(!data.questions) console.error('Data.questions fehlt', data.questions)
+      if (!data.title) console.error('Data.title fehlt', data.title)
+      if (!data.subtitle) console.error('Data.subtitle fehlt', data.subtitle)
+      if (!data.questions) console.error('Data.questions fehlt', data.questions)
       console.error('JSON Antwort von ChatGPT hat nicht die richtige Struktur (1)')
       throw new Error('JSON Antwort von ChatGPT hat nicht die richtige Struktur (1)')
     }
@@ -259,13 +289,11 @@ Vermeide Kommentare. Antworte ausschliesslich mit dem JSON-Objekt.`
     }
 
 
-
-
   } catch (e) {
     console.error('json import error', e)
     await Swal.fire({
       title: 'Fehler',
-      html: 'Die JSON Antwort von ChatGPT konnte nicht verarbeitet werden. '+e.message,
+      html: 'Die JSON Antwort von ChatGPT konnte nicht verarbeitet werden. ' + e.message,
       icon: 'error',
       timer: 5000,
       showConfirmButton: false
@@ -414,9 +442,23 @@ const addQuestion = async () => {
 
 onMounted(() => {
   checkLogin()
+  setupKeyboardListener()
 })
 const loading = ref(false)
 const saveCurrentQuiz = async () => {
+
+  // show a only loading swal
+  Swal.fire({
+    title: 'Quiz speichern',
+    html: 'Dein Quiz wird gespeichert. Bitte warten...',
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    showConfirmButton: false,
+    willOpen: () => {
+      Swal.showLoading()
+    }
+  })
+
   loading.value = true
   console.log('currentQuiz', currentQuiz.value.$id)
   const data = await appwrite.database.updateDocument('quiz', 'quizzes',
@@ -518,6 +560,35 @@ const importQuiz = async () => {
 const currentQR = computed(() => {
   return window.location.origin + '/quiz/play/' + currentQuiz.value.$id + '/pp-' + Math.random().toString(36).substring(7)
 })
+
+const advanced = ref(false)
+
+// während die option / alt taste gedrückt wird, wird die advanced option angezeigt
+const setupKeyboardListener = () => {
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Alt') {
+      advanced.value = true
+    }
+    // save quiz on all sorts of cmd+s, ctrl+s, option+s
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault()
+      saveCurrentQuiz()
+    }
+    // create new quiz on cmd+n, ctrl+n, option+n
+    if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+      e.preventDefault()
+      createQuiz()
+    }
+  })
+
+  window.addEventListener('keyup', (e) => {
+    if (e.key === 'Alt') {
+      advanced.value = false
+    }
+  })
+
+}
+
 const showQr = async () => {
   // zeige die id zum teilen an
   await Swal.fire({
