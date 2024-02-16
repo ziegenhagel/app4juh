@@ -31,7 +31,7 @@
 
         <h1 class="text-4xl">Spielmodus</h1>
         <h1 class="text-xl">Möchten Sie als Dozent oder als Teilnehmer:in spielen?</h1>
-        <v-btn :to="'/quiz/play/' + route.params.quiz + '?session='+ route.params.session" prepend-icon="mdi-play">Als
+        <v-btn @click="alsDozent" prepend-icon="mdi-play">Als
           Dozent
         </v-btn>
         <v-btn @click="presenterAsk = false" class="mb-12" prepend-icon="mdi-play">Als Teilnehmer:in</v-btn>
@@ -141,6 +141,30 @@ const setupAppwriteClickListener = () => {
 const client = useAppwriteClient()
 
 onMounted(setupAppwriteClickListener)
+
+const alsDozent = async () => {
+  // ask for pin 1044, and only continue via swal if the pin is correct
+  const {value: pin} = await Swal.fire({
+    title: 'Dozenten PIN',
+    input: 'text',
+    inputLabel: 'Bitte geben Sie die Dozenten PIN ein',
+    inputPlaceholder: 'Dozenten PIN',
+    inputAttributes: {
+      maxlength: 4,
+      autocapitalize: 'off',
+      autocorrect: 'off'
+    }
+  })
+
+  if (pin !== '1044') {
+    return Swal.fire('Falsche PIN', 'Die eingegebene PIN war falsch', 'error')
+  }
+
+
+  // redirect to="'/quiz/play/' + route.params.quiz + '?session='+ route.params.session"
+  const router = useRouter()
+  await router.push('/quiz/play/' + route.params.quiz + '?session=' + route.params.session)
+}
 </script>
 <style>
 
