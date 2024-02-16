@@ -21,10 +21,10 @@
       <div class="flex">
         <v-btn size="x-large"
                v-if="questionIndex > 0 || status === 'show_solution'"
-               @click="prev" variant="text" prepend-icon="mdi-arrow-left">Zurück</v-btn>
+               @click="prev" variant="text" prepend-icon="mdi-arrow-left"></v-btn>
         <v-spacer/>
         <v-btn size="x-large" @click="next" variant="text" append-icon="mdi-arrow-right">
-          {{ status === 'show_solution' ? 'Nächste Frage' : 'Antworten zeigen' }}
+          {{ status === 'show_solution' ? 'Weiter' : 'Lösung' }}
         </v-btn>
       </div>
     </div>
