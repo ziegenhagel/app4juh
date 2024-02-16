@@ -48,6 +48,7 @@
       </div>
     </div>
     <img src="/logo.svg"
+         v-if="!question"
          alt="icon" class="icon p-6 h-24 w-full"
          style="position:fixed;left:0;bottom:0;right:0"/>
   </div>
@@ -94,6 +95,15 @@ const finished = ref(false)
 
 // ACTIONS
 const clickAnswer = async (answer) => {
+
+  Swal.fire({
+    title: question.value.answers[answer].title,
+    text: '... wurde als Antwort gespeichert.',
+    // icon: 'info',
+    showConfirmButton: false,
+    timer: 1500
+  })
+
   console.log('clickAnswer', answer)
   if (status.value !== 'show_question') return
 
@@ -120,8 +130,12 @@ const setupAppwriteClickListener = () => {
           status.value = 'show_solution'
         } else {
           // if questionIndex is higher, show next question
-          questionIndex.value++
-          status.value = 'show_question'
+          if (event.payload.questionIndex > questionIndex.value) {
+            questionIndex.value = event.payload.questionIndex
+            status.value = 'show_question'
+          } else{
+            console.log('anscheinend kennen wir die Frage schon')
+          }
         }
 
         // START QUIZ
@@ -176,5 +190,10 @@ h1, h2 {
 .answer {
   color: #010545;
   @apply rounded-lg text-3xl shadow-lg
+}
+@media(max-height: 500px) {
+  .icon {
+    display: none;
+  }
 }
 </style>

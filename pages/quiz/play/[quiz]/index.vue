@@ -1,6 +1,6 @@
 <template>
-  <div v-if="ready" @click="next"
-       class="h-full absolute inset-0 flex-col flex bg-gray-100 px-10 py-12 my-3 cursor-pointer">
+  <div v-if="ready"
+       class="h-full absolute inset-0 flex-col overflow-y-auto flex bg-gray-100 px-10 py-12 my-1">
     <h1 class="text-4xl">
       <b>Frage {{ questionIndex + 1 }}</b>
       {{ question.title }}</h1>
@@ -18,6 +18,13 @@
           ></div>
         </div>
       </div>
+      <div class="flex">
+        <v-btn size="x-large" @click="prev" variant="text" prepend-icon="mdi-arrow-left">Zurück</v-btn>
+        <v-spacer/>
+        <v-btn size="x-large" @click="next" variant="text" append-icon="mdi-arrow-right">
+          {{ status === 'show_solution' ? 'Nächste Frage' : 'Antworten zeigen' }}
+        </v-btn>
+      </div>
     </div>
   </div>
   <div v-else-if="finished"
@@ -34,7 +41,8 @@
     </div>
     <h1 class="text-4xl" v-else>{{ quiz.title }}</h1>
     <v-btn @click="startenBtn" class="mt-8" prepend-icon="mdi-play">Starten!</v-btn>
-    <v-btn @click="clearQuiz" variant="text" class="opacity-20 m-2 position-fixed top-0 left-0" prepend-icon="mdi-replay"></v-btn>
+    <v-btn @click="clearQuiz" variant="text" class="opacity-20 m-2 position-fixed top-0 left-0"
+           prepend-icon="mdi-replay"></v-btn>
   </div>
 
   <!-- CI -->
@@ -90,6 +98,14 @@ const questionIndex = ref(-1)
 const question = computed(() => quiz.value.questions?.[questionIndex.value])
 const finished = ref(false)
 const status = ref('show_solution')
+const prev = () => {
+  if (status.value === 'show_solution') {
+    status.value = 'show_question'
+  } else {
+    status.value = 'show_solution'
+    questionIndex.value--
+  }
+}
 const next = async () => {
   // wir zeigen die Antworten
   if (status.value === 'show_solution') {
@@ -194,5 +210,11 @@ h1, h2 {
 .answer {
   color: #010545;
   @apply rounded-lg text-2xl shadow-lg
+}
+
+@media (max-height: 500px) {
+  .icon {
+    display: none;
+  }
 }
 </style>
