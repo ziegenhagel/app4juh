@@ -39,6 +39,7 @@
 
   <!-- CI -->
   <img src="/logo.svg" alt="icon" class="icon"
+       v-if="!ready"
        style="position:fixed;width:150px;left:50%;margin-left:-75px;bottom:25px">
   <!--  <img src="/icon.svg" alt="icon" class="icon" style="position:fixed;width:55px;left:0;bottom:0;margin:40px">-->
   <!--  <div class="aus-liebe-zum-leben">Aus Liebe zum Leben</div>-->

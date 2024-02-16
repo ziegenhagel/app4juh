@@ -47,7 +47,8 @@
         </div>
       </div>
     </div>
-    <img src="/logo.svg" alt="icon" class="icon p-6 h-24 w-full"
+    <img src="/logo.svg"
+         alt="icon" class="icon p-6 h-24 w-full"
          style="position:fixed;left:0;bottom:0;right:0"/>
   </div>
 </template>
