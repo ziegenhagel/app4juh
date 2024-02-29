@@ -23,7 +23,8 @@
          class="h-full absolute inset-0 w-full flex-col flex justify-center items-center bg-gray-100">
       <img :src=" '/quiz/inseln/i' + quiz.insel + '.svg' " alt="insel" class="w-24 mb-6"/>
       <h1 class="text-3xl font-medium" :style="{color: inseln[quiz.insel].color}">Gratulation!</h1>
-      <h2 class="text-xl px-5 mt-2 text-center">{{ correctAnswers }} von {{ correctAnswers + wrongAnswers }} Fragen richtig beantwortet</h2>
+      <h2 class="text-xl px-5 mt-2 text-center">{{ correctAnswers }} von {{ correctAnswers + wrongAnswers }} Fragen
+        richtig beantwortet</h2>
     </div>
     <div v-else
          class="h-full absolute inset-0 w-full flex-col flex justify-center items-center bg-gray-100">
@@ -100,23 +101,24 @@ const clickAnswer = async (answer) => {
   // inc correct or wrong answers
   if (question.value.answers[answer].correct) {
     correctAnswers.value++
-    Swal.fire({
-      title: question.value.answers[answer].title,
-      text: 'Ist richtig!',
-      icon: 'success',
-      showConfirmButton: false,
-      timer: 1500
-    })
+
   } else {
     wrongAnswers.value++
-    Swal.fire({
-      title: question.value.answers[answer].title,
-      text: 'Ist leider falsch.',
-      icon: 'error',
-      showConfirmButton: false,
-      timer: 1500
-    })
+    // Swal.fire({
+    //   title: 'Eingelogg: ' + question.value.answers[answer].title,
+    //   // text: 'Ist leider falsch.',
+    //   // icon: 'error',
+    //   showConfirmButton: false,
+    //   timer: 1500
+    // })
   }
+  Swal.fire({
+    title: 'Eingelogg: ' + question.value.answers[answer].title,
+    // text: 'Ist richtig!',
+    // icon: 'success',
+    showConfirmButton: false,
+    timer: 1500
+  })
   console.log('Du hast ' + correctAnswers.value + ' von ' + (correctAnswers.value + wrongAnswers.value) + ' Fragen richtig beantwortet')
 
   // Swal.fire({
@@ -145,11 +147,11 @@ const clickAnswer = async (answer) => {
 
 const setupAppwriteClickListener = () => {
   // ask before leaving the website
-  if(typeof window !== 'undefined')
-  window.onbeforeunload = function () {
-    window.alert('Möchtest du die Seite wirklich verlassen?')
-    return 'Möchtest du die Seite wirklich verlassen?'
-  }
+  if (typeof window !== 'undefined')
+    window.onbeforeunload = function () {
+      window.alert('Möchtest du die Seite wirklich verlassen?')
+      return 'Möchtest du die Seite wirklich verlassen?'
+    }
 
   console.log('setupAppwriteClickListener')
   client.subscribe('databases.quiz.collections.clicks.documents', async (event) => {
@@ -163,7 +165,7 @@ const setupAppwriteClickListener = () => {
           if (event.payload.questionIndex > questionIndex.value) {
             questionIndex.value = event.payload.questionIndex
             status.value = 'show_question'
-          } else{
+          } else {
             console.log('anscheinend kennen wir die Frage schon')
           }
         }
@@ -221,7 +223,8 @@ h1, h2 {
   color: #010545;
   @apply rounded-lg text-3xl shadow-lg
 }
-@media(max-height: 500px) {
+
+@media (max-height: 500px) {
   .icon {
     display: none;
   }
