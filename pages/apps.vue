@@ -96,9 +96,9 @@ const data = ref([
   },
   {
     title: 'Fallbeispiele',
-    disabled: true,
+    disabled: false,
     subtitle: 'Fallbeispiele für die Ausbildung',
-    url: 'https://fallbeispiele.app4juh.de',
+    url: 'https://app4juh.de/fall',
   },
   {
     title: 'Quiz',

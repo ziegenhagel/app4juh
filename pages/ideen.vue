@@ -8,7 +8,7 @@
   </div>
 </template>
 <script setup>
-const ideas = ['Insel 1, Strasse aufs Whiteboard zeichnen, dann Stückchenweise weiter ausbauen mit Auto hinmalen, zweites Auto daneben, Kurve dazu malen, Rettungswagen dazu, etc.',
+const oldIdeas = ['Insel 1, Strasse aufs Whiteboard zeichnen, dann Stückchenweise weiter ausbauen mit Auto hinmalen, zweites Auto daneben, Kurve dazu malen, Rettungswagen dazu, etc.',
     'Im Büro kann man auf Windows Q ein OCR Reader installieren, Roy-Udo hat die Datei dazu. Kein Admin Recht nötig.',
     'Window Power Toys installieren, is mega!',
     'Snapdrop nutzen',
@@ -21,6 +21,10 @@ const ideas = ['Insel 1, Strasse aufs Whiteboard zeichnen, dann Stückchenweise 
     'Immer im Unterricht mit Handschuhen arbeiten und Steril arbeiten',
     'Wald und Wiesenmedizin, wenn kein EH Koffer da ist - Selbstschutz Inhalte',
 ]
+
+const moreIdeas = 'Klicken raus machen, mit Handschuhen arbeiten, mit der App arbeiten, mit Filmen arbeiten, App for You, selbst spielen, selbst legen lassen, Plakate, Helikopter, Flip-Chart, Helm hinfallen, richtiges RUD, Motivation am Anfang, Diamanten, Vollbild Fallbeispiel Bilder auch mit Gerüchen und Szene erzählen, Monitor schwarz machen, Verband, Päckchen, der Knoten, der Angehörige und andere Störungen, Plakate miteinander in Verbindung setzen, organisatorisches in der Mitte, mögliches AB Testing, Namen lernen und sitzplan, 1 Fakt pro Person'.split(', ')
+const ideas = [...oldIdeas, ...moreIdeas]
+
 useHead({
   title: 'Ideen',
   meta: [

@@ -130,20 +130,20 @@ const form = ref({
 // watch auf course, falls der dvb wird kannst du die zielgruppe auf "Busfahrer" setzen
 watch(() => form.value.course, (course) => {
   if (course?.short === 'DVB') {
-    form.zielgruppe = 'Busfahrer'
+    form.value.zielgruppe = 'Busfahrer'
     step.value++
   }
 })
 
 
 const inselFall = (insel) => {
-  form.insel = insel
-  form.fallauswahl = insel.fall
+  form.value.insel = insel
+  form.value.fallauswahl = insel.fall
   submit()
 }
 const zuFall = () => {
-  form.insel = null
-  form.fallauswahl = ''
+  form.value.insel = null
+  form.value.fallauswahl = ''
   submit()
 }
 
