@@ -113,8 +113,8 @@ const courses = [
     color: '#2f7cc2'
   },
   {
-    title: 'Sanitätshelfer',
-    chatgpt_title: 'Sanitätshelfer Qualifikations Kurs in 87 UE (Behandlung mit xABCDE, Samplers, etc.)',
+    title: 'Sanitätshelfer/BSan',
+    chatgpt_title: 'Sanitätshelfer/Betriebssanitäter Qualifikations Kurs in 87 UE (Behandlung mit xABCDE, Samplers, etc.), nach DGUV 304-002',
     short: 'SanH',
     icon: 'mdi-hospital-building',
     color: '#4b5257'
