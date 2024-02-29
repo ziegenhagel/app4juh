@@ -91,7 +91,7 @@ const data = ref([
     title: 'Fileshare',
     disabled: false,
     subtitle: 'Teile Dateien mit anderen',
-    url: 'https://pairdrop.net'
+    url: 'https://qr.gofxm.de'
     //https://qr.gofxm.de/
   },
   {
