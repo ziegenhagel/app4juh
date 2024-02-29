@@ -286,6 +286,8 @@ Vermeide Kommentare. Antworte ausschliesslich mit dem JSON-Objekt.`
 
     if (formValues) {
       await saveCurrentQuiz()
+      // einmal neuladen
+      window.location.reload()
     }
 
 
