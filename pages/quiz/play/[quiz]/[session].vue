@@ -100,7 +100,6 @@ const clickAnswer = async (answer) => {
   // wenn die lösung angezeigt wird, dürfen wir natürlich nicht klicken
   if (status.value === 'show_solution') return
 
-
   // inc correct or wrong answers
   if (question.value.answers[answer].correct) {
     correctAnswers.value++

@@ -1,20 +1,20 @@
 <template>
   <v-app-bar color="#eb003c">
     <div style="background:#000548" class="p-2 h-full">
-      <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <!--      <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>-->
     </div>
     <img src="/image/app4juh.svg" alt="App4Juh Logo" class="w-32"/>
     <v-app-bar-title>
       <span class="font-bold">Accounts</span> verwalten
     </v-app-bar-title>
-    <template #append>
-      <v-btn @click="play"
-             v-if="currentQuiz"
-             color="#deff00"
-             variant="flat" prepend-icon="mdi-play">Quiz starten
-      </v-btn>
-      <!--      <v-btn @click="logout" color="white"  variant="flat" prepend-icon="mdi-logout">Ausloggen</v-btn>-->
-    </template>
+    <!--    <template #append>-->
+    <!--      <v-btn @click="play"-->
+    <!--             v-if="currentQuiz"-->
+    <!--             color="#deff00"-->
+    <!--             variant="flat" prepend-icon="mdi-play">Quiz starten-->
+    <!--      </v-btn>-->
+    <!--      &lt;!&ndash;      <v-btn @click="logout" color="white"  variant="flat" prepend-icon="mdi-logout">Ausloggen</v-btn>&ndash;&gt;-->
+    <!--    </template>-->
 
   </v-app-bar>
 
@@ -75,10 +75,19 @@
         </div>
       </v-card-text>
     </v-card>
+<!--    <v-card class="mt-4">-->
+<!--      <v-card-title>Accounts</v-card-title>-->
+<!--      <v-card-text>-->
+<!--        {{ accounts }}-->
+<!--      </v-card-text>-->
+<!--    </v-card>-->
+
+
   </div>
 </template>
 <script setup>
-import {Client, Databases, ID, Query} from "appwrite";
+import {Client, Databases, ID, Query } from "appwrite";
+import {useAppwriteClient} from "~/composables/aw.ts";
 
 definePageMeta({layout: 'quiz'})
 const appwrite = useAppwrite()
